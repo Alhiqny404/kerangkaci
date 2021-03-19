@@ -13,6 +13,10 @@
             <tr>
               <th>No</th>
               <th>menu</th>
+              <th>title</th>
+              <th>icon</th>
+              <th>url</th>
+              <th>tipe</th>
               <th>opsi</th>
             </tr>
           </thead>

@@ -28,8 +28,8 @@
 
 
 <script>
-  var save_method; //for save method string
-  var table;
+  let save_method; //for save method string
+  let table;
   $(document).ready(function() {
     table = $('#table').DataTable({
 
@@ -90,7 +90,7 @@
   }
 
   function save() {
-    var url;
+    let url;
     if (save_method == 'add') {
       url = "<?= site_url('ajax/role/add') ?>";
     } else
@@ -106,7 +106,8 @@
       dataType: "JSON",
       success: function(data) {
         //if success close modal and reload ajax table
-        var nameRole = $('[name="role"]').val(data.role);
+        let namaRole = $('[name="role"]').val();
+        console.log(namaRole);
         $('#modal_form').modal('hide');
         reload_table();
         if (save_method == 'add') {
@@ -185,21 +186,21 @@
         <h3 class="modal-title">Role Form</h3>
       </div>
       <div class="modal-body form">
-        <form action="#" id="form" class="form-horizontal">
+        <form method="post" id="form" class="form-horizontal">
           <input type="hidden" value="" name="id" />
           <div class="form-body">
             <div class="form-group">
-              <label class="control-label col-md-3">Role</label>
-              <div class="col-md-9">
-                <input name="role" placeholder="Role" class="form-control" type="text">
-              </div>
+              <label class="control-label">Role</label>
+                <input name="role" placeholder="Role" id="role" class="form-control is-invalid" type="text">
+                <div class="invalid-feedback"></div>
             </div>
           </div>
-        </form>
+        
       </div>
       <div class="modal-footer">
-        <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+        <button type="submit" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </form>
       </div>
     </div>
     <!-- /.modal-content -->

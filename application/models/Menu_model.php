@@ -5,9 +5,9 @@ class Menu_Model extends CI_Model {
 
   var $table = 'menu';
   var $column_order = [null,
-    'menu',
+    'menu','title','icon','url','tile',
     null];
-  var $column_search = ['menu'];
+  var $column_search = ['menu','title','icon','url','tipe'];
   var $order = ['menu' => 'asc'];
 
   public function __construct() {

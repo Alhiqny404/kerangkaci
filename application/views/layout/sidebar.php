@@ -22,19 +22,26 @@
       </a></li>
 
 
-
-      <?php $i = 1; foreach (menu() as $m) : ?>
-      <li class="droplink"><a href="" class="waves-effect waves-button"><span class="menu-icon icon-settings"></span><p>
+      <?php foreach (menu() as $m) : ?>
+        
+        <?php if($m['tipe'] < 1) :?>
+          <li><a href="<?=base_url($sm['url']); ?>" class="waves-effect waves-button"><span class="menu-icon icon-home">
+          </span><p><?= $m['menu'];?></p></a></li>
+        <?php else: ?>
+          <li class="droplink"><a href="#" class="waves-effect waves-button"><span class="menu-icon icon-settings"></span><p>
         <?= $m['menu']; ?>
       </p>
         <span class="arrow"></span></a>
         <ul class="sub-menu">
-          <?php $is = 1; foreach (submenu($m['id']) as $sm): ?>
+          <?php foreach (submenu($m['id']) as $sm): ?>
           <li><a href="<?=base_url($sm['url']); ?>"><?=$sm['title']; ?></a></li>
           <?php endforeach; ?>
         </ul>
       </li>
+        <?php endif;?>
+
       <?php endforeach; ?>
+
 
 
       <li class="droplink"><a href="" class="waves-effect waves-button"><span class="menu-icon icon-settings"></span><p>

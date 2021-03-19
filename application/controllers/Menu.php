@@ -83,6 +83,10 @@ class Menu extends CI_Controller {
       $row = [];
       $row[] = $no;
       $row[] = $ls->menu;
+      $row[] = $ls->title;
+      $row[] = $ls->icon;
+      $row[] = $ls->url;
+      $row[] = $ls->tipe;
 
       //add html for action
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
