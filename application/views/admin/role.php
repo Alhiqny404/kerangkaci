@@ -38,7 +38,7 @@
 
       // Load data for the table's content from an Ajax source
       "ajax": {
-        "url": "<?= site_url('ajax/role') ?>",
+        "url": "<?= site_url('sistem/role/ajaxList') ?>",
         "type": "POST"
       },
 
@@ -67,7 +67,7 @@
 
     //Ajax Load data from ajax
     $.ajax({
-      url: "<?= site_url('ajax/role/edit/') ?>" + id,
+      url: "<?= site_url('sistem/role/ajax_edit/') ?>" + id,
       type: "GET",
       dataType: "JSON",
       success: function(data) {
@@ -92,10 +92,10 @@
   function save() {
     let url;
     if (save_method == 'add') {
-      url = "<?= site_url('ajax/role/add') ?>";
+      url = "<?= site_url('sistem/role/ajax_add') ?>";
     } else
     {
-      url = "<?= site_url('ajax/role/update') ?>";
+      url = "<?= site_url('sistem/role/ajax_update') ?>";
     }
 
     // ajax adding data to database
@@ -107,15 +107,13 @@
       success: function(data) {
         //if success close modal and reload ajax table
         let namaRole = $('[name="role"]').val();
-        console.log(namaRole);
         $('#modal_form').modal('hide');
         reload_table();
         if (save_method == 'add') {
-          toastr.success('Role ' + namaRole + ' Berhasil Ditambahkan!')
+          toastr.success('Role ' + namaRole + ' Berhasil Ditambahkan!');
         } else
         {
-          toastr.success('Role Baru saja diedit')
-
+          toastr.success('Role Baru saja diedit');
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -141,7 +139,7 @@
 
         // ajax delete data to database
         $.ajax({
-          url: "<?php echo site_url('ajax/role/delete/') ?>"+id,
+          url: "<?php echo site_url('sistem/role/ajax_delete/') ?>"+id,
           type: "POST",
           dataType: "JSON",
           success: function(data) {
@@ -162,17 +160,9 @@
 
   }
 
-  function view_person(id) {
-    $.ajax({
-      url: "<?php echo site_url('welcome/list_by_id') ?>/" + id,
-      type: "GET",
-      success: function(result) {
-        $('#haha').empty().html(result).fadeIn('slow');
-      },
-      error: function (jqXHR, textStatus, errorThrown) {}
-    });
+  function akses(id) {
+    document.location.href = "<?=site_url('sistem/role/akses/') ?>"+id;
   }
-
 
 </script>
 
@@ -186,20 +176,20 @@
         <h3 class="modal-title">Role Form</h3>
       </div>
       <div class="modal-body form">
-        <form method="post" id="form" class="form-horizontal">
+        <form id="form" action="#" class="form-horizontal">
           <input type="hidden" value="" name="id" />
           <div class="form-body">
             <div class="form-group">
               <label class="control-label">Role</label>
-                <input name="role" placeholder="Role" id="role" class="form-control is-invalid" type="text">
-                <div class="invalid-feedback"></div>
+              <input name="role" placeholder="Role" id="role" class="form-control is-invalid" type="text">
+              <div class="invalid-feedback"></div>
             </div>
           </div>
-        
-      </div>
-      <div class="modal-footer">
-        <button type="submit" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
         </form>
       </div>
     </div>

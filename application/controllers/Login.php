@@ -3,10 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Login extends CI_Controller {
   public function index() {
+    // JIKA TELAH LOGIN
     if ($this->session->userdata('email')) {
       redirect('admin');
-    } else {
-
+    }
+    // JIKA BELUM KOGIN
+    else {
       $this->_validation();
     }
   }
@@ -14,6 +16,7 @@ class Login extends CI_Controller {
 
   private function _validation() {
 
+    // SET RULES UNTUK FORM
     $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email', [
       'required' => 'email harus diisi',
       'valid_email' => 'email tidak valid'
@@ -24,59 +27,47 @@ class Login extends CI_Controller {
     $email = $this->input->post('email');
     $password = $this->input->post('password');
 
+    // JIKA VALIDASI GAGAL
     if ($this->form_validation->run() == false) {
       $this->load->view('auth/login');
-    } else
+    }
+    // JIKA LOLOS VALIDASI
+    else
     {
       $user = $this->db->get_where('user', ['email' => $email])->row_array();
+      // JIKA EMAIL BENAR
       if ($user) {
+        // JIKA AKUN SUDAH VERIFIKASI
         if ($user['is_active'] == 1) {
           if (password_verify($password, $user['password'])) {
-
-            $limit = $this->db->query("SELECT `limit_salah` FROM `user` WHERE `email` = '$email'")->row_array()['limit_salah'];
-            if ($limit < 7) {
-              $data = [
-                'email' => $user['email'],
-                'role_id' => $user['role_id'],
-                'nama' => $user['nama'],
-                //'referred_from' => current_url()
-              ];
-              $this->session->set_userdata($data);
-              if ($user['role_id'] == 1) {
-                redirect('admin');
-              } else {
-                redirect('user');
-              }
-            } else
-            {
-              echo "akun anda telah terblokir karena memasukan password salah lebih dari 7 kali <br> silahkan hubungi admin"; die;
+            $data = [
+              'email' => $user['email'],
+              'role_id' => $user['role_id'],
+              'nama' => $user['nama']
+            ];
+            $this->session->set_userdata($data);
+            // JIKA ROLE ADMIN
+            if ($user['role_id'] == 1) {
+              redirect('dashboard');
+            }
+            // JIKA ROLE USER
+            else {
+              redirect('profile');
             }
 
-
-
-
-          } else
+          }
+          // JIKA PASSWORD SALAH
+          else
           {
-
-
-            //$this->db->where('email',$email);
-            $limit = $this->db->query("SELECT `limit_salah` FROM `user` WHERE `email` = '$email'")->row_array()['limit_salah'] + 1;
-
-            if ($limit > 7) {
-              echo 'akun anda telah terblokir karena memasukan password salah lebih dari 7 kali <br> silahkan hubungi admin'; die;
-            }
-
-            $this->db->set('limit_salah', $limit);
-            $this->db->where('email', $email);
-            $this->db->update('user');
             $this->session->set_flashdata('!password', '<small class="text-danger pl-3"> password salah</small>');
             redirect('login');
           }
-        } else
-        {
-          echo 'akun anda terblokir';
+        } else {
+          echo 'akun belum aktif';
         }
-      } else
+      }
+      // JIKA EMAIL SALAH
+      else
       {
         $this->session->set_flashdata('!email', '<small class="text-danger pl-3"> email salah</small>');
         redirect('login');
@@ -84,9 +75,7 @@ class Login extends CI_Controller {
       }
     }
   }
-
   public function logout() {
-
     $this->session->sess_destroy();
     redirect('login');
   }

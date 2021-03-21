@@ -54,12 +54,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 
-
-// route dashboard
-$route['dashboard'] = 'dashboard';
-$route['dashboard/role'] = 'role';
-$route['dashboard/system/menu'] = 'menu';
-$route['dashboard/system/submenu'] = 'submenu';
+$route['sistem/role-access/(:num)'] = 'sistem/roleaccess/$1';
 
 
 $route['user/ganti-password'] = 'user/changepw';
@@ -74,15 +69,3 @@ $route['ajax/role/add'] = 'role/ajax_add';
 $route['ajax/role/update'] = 'role/ajax_update';
 $route['ajax/role/edit/(:num)'] = 'role/ajax_edit/$1';
 $route['ajax/role/delete/(:num)'] = 'role/ajax_delete/$1';
-
-$route['ajax/menu'] = 'menu/ajaxList';
-$route['ajax/menu/add'] = 'menu/ajax_add';
-$route['ajax/menu/update'] = 'menu/ajax_update';
-$route['ajax/menu/edit/(:num)'] = 'menu/ajax_edit/$1';
-$route['ajax/menu/delete/(:num)'] = 'menu/ajax_delete/$1';
-
-$route['ajax/submenu'] = 'submenu/ajaxList';
-$route['ajax/submenu/add'] = 'submenu/ajax_add';
-$route['ajax/submenu/update'] = 'submenu/ajax_update';
-$route['ajax/submenu/edit/(:num)'] = 'submenu/ajax_edit/$1';
-$route['ajax/submenu/delete/(:num)'] = 'submenu/ajax_delete/$1';

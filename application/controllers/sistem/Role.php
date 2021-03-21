@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin extends CI_Controller {
+class Role extends CI_Controller {
 
 
 
@@ -13,35 +13,21 @@ class Admin extends CI_Controller {
   }
 
   public function index() {
-    $email = $this->session->userdata('email');
-    $data['user'] = $this->db->get_where('user', ['email' => $email])->row_array();
-    $page = 'admin/dashboard';
-    $data['title'] = 'Dashboard';
-    //$this->load->view('admin/dashboard', $data);
-    pages($page, $data);
-  }
-  /*
-  public function role() {
     $data['role'] = $this->db->get('role')->result_array();
     $page = 'admin/role';
     $data['title'] = 'Role';
     pages($page, $data);
   }
-*/
-  public function addRole() {
-    $data = ['role' => $this->input->post('role')];
-    $this->db->insert('role', $data);
-    redirect('admin/role');
-  }
 
-  public function access_role($roleId) {
-    $data['role'] = $this->db->get_where('role', ['id' => $roleId])->row_array();
+  public function akses($id) {
 
-    $data['menu'] = $this->db->get_where('menu', ['id !=' => 1])->result_array();
+    $data['role'] = $this->db->get_where('role', ['id' => $id])->row_array();
+    $data['menu'] = $this->db->get('menu')->result_array();
     $page = 'admin/access-role';
     $data['title'] = 'Role';
     pages($page, $data);
   }
+
 
   public function changeAccess() {
     $menuId = $this->input->post('menuId');
@@ -61,8 +47,7 @@ class Admin extends CI_Controller {
   }
 
 
-
-  public function roleAjax() {
+  public function ajaxList() {
     $list = $this->role->get_datatables();
     $data = [];
     $no = $_POST['start'];
@@ -75,7 +60,8 @@ class Admin extends CI_Controller {
       //add html for action
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
              onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i> edit</a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
-                  onclick="delete('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-trash"> hapus</i></a>';
+                  onclick="delete_role('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-trash"> hapus</i></a><a class="btn btn-sm btn-warning" href="javascript:void(0)"
+                  onclick="akses('."'".$ls->id."'".')"><i class="fa fa-eye"> role akses</i></a>';
 
       $data[] = $row;
     }
@@ -88,6 +74,29 @@ class Admin extends CI_Controller {
     ];
     //output to json format
     echo json_encode($output);
+  }
+  public function ajax_edit($id) {
+    $data = $this->role->get_by_id($id);
+    echo json_encode($data);
+  }
+  public function ajax_add() {
+    $data = array(
+      'role' => $this->input->post('role')
+    );
+
+    $insert = $this->role->save($data);
+    echo json_encode(array("status" => TRUE));
+  }
+  public function ajax_update() {
+    $data = array(
+      'role' => $this->input->post('role')
+    );
+    $this->role->update(array('id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+  public function ajax_delete($id) {
+    $this->role->delete_by_id($id);
+    echo json_encode(array("status" => TRUE));
   }
 
 

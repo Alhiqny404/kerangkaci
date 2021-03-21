@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Role extends CI_Controller {
+class Roleaccess extends CI_Controller {
 
 
 
@@ -12,13 +12,43 @@ class Role extends CI_Controller {
     harus_login();
   }
 
-  public function index() {
-    $data['role'] = $this->db->get('role')->result_array();
-    $page = 'admin/role';
+  public function index($id) {
+
+    $data['role'] = $this->db->get_where('role', ['id' => $id])->row_array();
+    $data['menu'] = $this->db->get('menu')->result_array();
+    $page = 'admin/access-role';
     $data['title'] = 'Role';
     pages($page, $data);
   }
 
+  public function get_by_id($id) {
+    $list = $this->role->get_by_id($id);
+    $data = [];
+    $no = $_POST['start'];
+    foreach ($list as $ls) {
+      $no++;
+      $row = [];
+      $row[] = $no;
+      $row[] = $ls->role;
+
+      //add html for action
+      $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
+             onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i> edit</a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
+                  onclick="delete_role('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-trash"> hapus</i></a><a class="btn btn-sm btn-warning" href="javascript:void(0)"
+                  onclick="akses('."'".$ls->id."'".')"><i class="fa fa-eye"> role akses</i></a>';
+
+      $data[] = $row;
+    }
+
+    $output = [
+      "draw" => $_POST['draw'],
+      "recordsTotal" => $this->role->count_all(),
+      "recordsFiltered" => $this->role->count_filtered(),
+      "data" => $data,
+    ];
+    //output to json format
+    echo json_encode($output);
+  }
   public function ajaxList() {
     $list = $this->role->get_datatables();
     $data = [];
@@ -32,7 +62,8 @@ class Role extends CI_Controller {
       //add html for action
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
              onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i> edit</a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
-                  onclick="delete_role('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-trash"> hapus</i></a>';
+                  onclick="delete_role('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-trash"> hapus</i></a><a class="btn btn-sm btn-warning" href="javascript:void(0)"
+                  onclick=""><i class="fa fa-eye"> role akses</i></a>';
 
       $data[] = $row;
     }

@@ -29,6 +29,7 @@ function menu() {
              INNER JOIN role_menu
              ON role_menu.menu_id = menu.id
              WHERE role_menu.role_id = $roleId AND menu != 'ajax'
+             ORDER BY urutan ASC
             ";
   return $menu = $ci->db->query($queryM)->result_array();
 }

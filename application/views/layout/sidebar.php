@@ -16,19 +16,17 @@
       </div>
     </div>
     <ul class="menu accordion-menu">
-      <li><a href="" class="waves-effect waves-button"><span class="menu-icon icon-home"></span><p>
-        Dashboard
-      </p>
-      </a></li>
-
 
       <?php foreach (menu() as $m) : ?>
-        
-        <?php if($m['tipe'] < 1) :?>
-          <li><a href="<?=base_url($sm['url']); ?>" class="waves-effect waves-button"><span class="menu-icon icon-home">
-          </span><p><?= $m['menu'];?></p></a></li>
-        <?php else: ?>
-          <li class="droplink"><a href="#" class="waves-effect waves-button"><span class="menu-icon icon-settings"></span><p>
+
+      <?php if ($m['tipe'] < 2) : ?>
+      <li><a href="<?=base_url($m['menu']); ?>" class="waves-effect waves-button"><i class="menu-icon<?=' '.$m['icon']; ?>">
+      </i><p>
+        <?= $m['title']; ?>
+      </p>
+      </a></li>
+      <?php else : ?>
+      <li class="droplink"><a href="#" class="waves-effect waves-button"><i class="menu-icon<?=' '.$m['icon']; ?>"></i><p>
         <?= $m['menu']; ?>
       </p>
         <span class="arrow"></span></a>
@@ -38,20 +36,8 @@
           <?php endforeach; ?>
         </ul>
       </li>
-        <?php endif;?>
-
+      <?php endif; ?>
       <?php endforeach; ?>
-
-
-
-      <li class="droplink"><a href="" class="waves-effect waves-button"><span class="menu-icon icon-settings"></span><p>
-        Settings
-      </p>
-        <span class="arrow"></span></a>
-        <ul class="sub-menu">
-          <li><a href="">Basic</a></li>
-        </ul>
-      </li>
       <li><a href="<?=base_url('login/logout'); ?>" class="waves-effect waves-button"><span class="menu-icon icon-logout"></span><p>
         Log Out
       </p>

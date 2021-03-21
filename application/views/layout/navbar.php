@@ -25,9 +25,10 @@
             <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
               <span class="user-name">Alhiqny<i class="fa fa-angle-down"></i></span>
 
-              <img class="img-circle avatar" src="" width="40" height="40" alt="">
+              <img class="img-circle avatar" src="<?= base_url('uploads/image/profile/').datauser($this->session->userdata('email'))['avatar']; ?>" width="40" height="40" alt="">
             </a>
             <ul class="dropdown-menu dropdown-list" role="menu">
+              <li role="presentation"><a href="<?= site_url('profile'); ?>"><i class="fa fa-sign-out m-r-xs"></i>Profile Saya</a></li>
               <li role="presentation"><a href=""><i class="fa fa-sign-out m-r-xs"></i>Log out</a></li>
             </ul>
           </li>

@@ -37,21 +37,43 @@
   var save_method; //for save method string
   var table;
   $(document).ready(function() {
+
+
+    $('#datamenu').on('change', function() {
+      var menu = $("#datamenu option:selected").attr('datamenu').toLowerCase();
+      var urlval = $('[name="url"]').val();
+      if (save_method == 'add') {
+        $('[name="url"]').val(menu+'/');
+      } else {
+        var url = urlval.split('/');
+
+        console.log(url[0]);
+        url[0] = menu;
+        console.log(url.join('/'));
+        $('[name="url"]').val(url.join('/'));
+
+      }
+    });
+
     table = $('#table').DataTable({
 
-      "processing": true, //Feature control the processing indicator.
-      "serverSide": true, //Feature control DataTables' server-side processing mode.
+      "processing": true,
+      //Feature control the processing indicator.
+      "serverSide": true,
+      //Feature control DataTables' server-side processing mode.
 
       // Load data for the table's content from an Ajax source
       "ajax": {
-        "url": "<?php echo site_url('ajax/submenu') ?>",
+        "url": "<?php echo site_url('sistem/submenu/ajaxList') ?>",
         "type": "POST"
       },
 
       //Set column definition initialisation properties.
       "columnDefs": [{
-        "targets": [-1], //last column
-        "orderable": false, //set not orderable
+        "targets": [-1],
+        //last column
+        "orderable": false,
+        //set not orderable
       },
       ],
 
@@ -73,7 +95,7 @@
     console.log(id);
     //Ajax Load data from ajax
     $.ajax({
-      url: "<?= site_url('ajax/submenu/edit/') ?>" + id,
+      url: "<?= site_url('sistem/submenu/ajax_edit/') ?>" + id,
       type: "GET",
       dataType: "JSON",
       success: function(data) {
@@ -101,10 +123,10 @@
   function save() {
     var url;
     if (save_method == 'add') {
-      url = "<?= site_url('ajax/submenu/add') ?>";
+      url = "<?= site_url('sistem/submenu/ajax_add') ?>";
     } else
     {
-      url = "<?= site_url('ajax/submenu/update') ?>";
+      url = "<?= site_url('sistem/submenu/ajax_update') ?>";
     }
 
     // ajax adding data to database
@@ -117,11 +139,12 @@
         //if success close modal and reload ajax table
         $('#modal_form').modal('hide');
         reload_table();
-        swal(
-          'Good job!',
-          'Data has been save!',
-          'success'
-        )
+        if (save_method == 'add') {
+          toastr.success('submenu Baru Berhasil Ditambahkan!');
+        } else
+        {
+          toastr.success('submenu Baru saja diedit');
+        }
       },
       error: function (jqXHR, textStatus, errorThrown) {
         alert('Error adding / update data');
@@ -146,18 +169,15 @@
 
         // ajax delete data to database
         $.ajax({
-          url: "<?php echo site_url('ajax/submenu/delete/') ?>"+id,
+          url: "<?php echo site_url('sistem/submenu/ajax_delete/') ?>"+id,
           type: "POST",
           dataType: "JSON",
           success: function(data) {
             //if success reload ajax table
             $('#modal_form').modal('hide');
             reload_table();
-            swal(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            );
+            swal.close();
+            toastr.success('submenu Baru saja dihapus');
           },
           error: function (jqXHR, textStatus, errorThrown) {
             alert('Error adding / update data');
@@ -189,92 +209,43 @@
           <input type="hidden" value="" name="id" />
           <div class="form-body">
             <div class="form-group">
-              <label class="control-label col-md-3">menu</label>
+              <label class="control-label col-md-2">menu</label>
               <div class="col-md-9">
-                <select class="form-control" name="menu_id">
+                <select class="form-control" name="menu_id" id="datamenu">
                   <option>--- menu ---</option>
                   <?php foreach ($menu as $m) : ?>
-                  <option value="<?= $m['id']; ?>"><?= $m['menu']; ?></option>
+                  <option value="<?= $m['id']; ?>" datamenu="<?= $m['menu']; ?>" id="menu"><?= $m['menu']; ?></option>
                   <?php endforeach; ?>
                 </select>
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">title</label>
+              <label class="control-label col-md-2">title</label>
               <div class="col-md-9">
                 <input name="title" placeholder="title" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">icon</label>
+              <label class="control-label col-md-2">icon</label>
               <div class="col-md-9">
                 <input name="icon" placeholder="icon" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">url</label>
+              <label class="control-label col-md-2">url</label>
               <div class="col-md-9">
-                <input name="url" placeholder="url" class="form-control" type="text">
+
+                <span class="input-group-addon" id="site_url"><?= site_url(); ?></span>
+                <input name="url" placeholder="url" class="form-control" type="text" value="">
               </div>
             </div>
+
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-<!-- End Bootstrap modal -->
-
-
-
-<!-- Bootstrap modal -->
-<div class="modal fade" id="modal" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Data Pelanggan</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="<?= base_url('submenu/subsubmenuAdd'); ?>" id="form" class="form-horizontal" method="POST">
-          <input type="hidden" value="" name="id" />
-          <div class="form-body">
-            <div class="form-group">
-              <select class="form-control" name="submenu_id">
-                <option>--- submenu ---</option>
-                <?php foreach ($submenu as $m) : ?>
-                <option value="<?= $m['id']; ?>"><?= $m['submenu']; ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Title</label>
-              <input type="text" name="title" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Icon</label>
-              <input type="text" name="icon" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Url</label>
-              <input type="text" name="url" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" id="btnSave" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-        </form>
       </div>
     </div>
     <!-- /.modal-content -->

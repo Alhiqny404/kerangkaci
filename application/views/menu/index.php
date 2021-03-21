@@ -2,7 +2,7 @@
 
 
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-10">
     <!-- TABLE STRIPED -->
     <div class="panel">
       <div class="panel-body">
@@ -15,7 +15,6 @@
               <th>menu</th>
               <th>title</th>
               <th>icon</th>
-              <th>url</th>
               <th>tipe</th>
               <th>opsi</th>
             </tr>
@@ -35,21 +34,26 @@
   var save_method; //for save method string
   var table;
   $(document).ready(function() {
+
     table = $('#table').DataTable({
 
-      "processing": true, //Feature control the processing indicator.
-      "serverSide": true, //Feature control DataTables' server-side processing mode.
+      "processing": true,
+      //Feature control the processing indicator.
+      "serverSide": true,
+      //Feature control DataTables' server-side processing mode.
 
       // Load data for the table's content from an Ajax source
       "ajax": {
-        "url": "<?= site_url('ajax/menu') ?>",
+        "url": "<?= site_url('sistem/menu/ajaxList') ?>",
         "type": "POST"
       },
 
       //Set column definition initialisation properties.
       "columnDefs": [{
-        "targets": [-1], //last column
-        "orderable": false, //set not orderable
+        "targets": [-1],
+        //last column
+        "orderable": false,
+        //set not orderable
       },
       ],
 
@@ -71,13 +75,16 @@
 
     //Ajax Load data from ajax
     $.ajax({
-      url: "<?= site_url('ajax/menu/edit/') ?>" + id,
+      url: "<?= site_url('sistem/menu/ajax_edit/') ?>" + id,
       type: "GET",
       dataType: "JSON",
       success: function(data) {
 
         $('[name="id"]').val(data.id);
         $('[name="menu"]').val(data.menu);
+        $('[name="title"]').val(data.title);
+        $('[name="icon"]').val(data.icon);
+        $('[name="tipe"]').val(data.tipe);
 
         $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
         $('.modal-title').text('Edit menu'); // Set title to Bootstrap modal title
@@ -96,10 +103,10 @@
   function save() {
     var url;
     if (save_method == 'add') {
-      url = "<?= site_url('ajax/menu/add') ?>";
+      url = "<?= site_url('sistem/menu/ajax_add') ?>";
     } else
     {
-      url = "<?= site_url('ajax/menu/update') ?>";
+      url = "<?= site_url('sistem/menu/ajax_update') ?>";
     }
 
     // ajax adding data to database
@@ -112,11 +119,13 @@
         //if success close modal and reload ajax table
         $('#modal_form').modal('hide');
         reload_table();
-        swal(
-          'Good job!',
-          'Data has been save!',
-          'success'
-        )
+        if (save_method == 'add') {
+          toastr.success('Menu Baru Berhasil Ditambahkan!');
+        } else
+        {
+          toastr.success('Menu Baru saja diedit');
+        }
+
       },
       error: function (jqXHR, textStatus, errorThrown) {
         alert('Error adding / update data');
@@ -141,18 +150,15 @@
 
         // ajax delete data to database
         $.ajax({
-          url: "<?php echo site_url('ajax/menu/delete/') ?>"+id,
+          url: "<?php echo site_url('sistem/menu/ajax_delete/') ?>"+id,
           type: "POST",
           dataType: "JSON",
           success: function(data) {
             //if success reload ajax table
             $('#modal_form').modal('hide');
             reload_table();
-            swal(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            );
+            swal.close();
+            toastr.success('Menu Baru saja dihapus');
           },
           error: function (jqXHR, textStatus, errorThrown) {
             alert('Error adding / update data');
@@ -163,17 +169,6 @@
       }
     })
 
-  }
-
-  function view_person(id) {
-    $.ajax({
-      url: "<?php echo site_url('welcome/list_by_id') ?>/" + id,
-      type: "GET",
-      success: function(result) {
-        $('#haha').empty().html(result).fadeIn('slow');
-      },
-      error: function (jqXHR, textStatus, errorThrown) {}
-    });
   }
 
 
@@ -193,9 +188,31 @@
           <input type="hidden" value="" name="id" />
           <div class="form-body">
             <div class="form-group">
-              <label class="control-label col-md-3">menu</label>
+              <label class="control-label col-md-2">menu</label>
               <div class="col-md-9">
                 <input name="menu" placeholder="menu" class="form-control" type="text">
+              </div>
+            </div>
+            <div class="form-group none">
+              <label class="control-label col-md-2">title</label>
+              <div class="col-md-9">
+                <input name="title" placeholder="title" class="form-control" type="text">
+              </div>
+            </div>
+            <div class="form-group none">
+              <label class="control-label col-md-2">icon</label>
+              <div class="col-md-9">
+                <input name="icon" placeholder="icon" class="form-control" type="text">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="tipemenu" class="control-label col-md-2">Tipe</label>
+              <div class="col-md-9">
+                <select name="tipe" class="form-control tipemenu" id="tipemenu">
+                  <option value="0">--- PILIH TIPE ---</option>
+                  <option value="1">Biasa</option>
+                  <option value="2">Dropdown</option>
+                </select>
               </div>
             </div>
           </div>

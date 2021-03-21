@@ -11,8 +11,7 @@ class Submenu extends CI_Controller {
 
 
   public function index() {
-    $data['submenu'] = $this->submenu->getSubMenu();
-    $data['menu'] = $this->db->get('menu')->result_array();
+    $data['menu'] = $this->db->get_where('menu', ['tipe' => 2])->result_array();
     $page = 'menu/submenu';
     $data['title'] = 'Sub Menu';
     pages($page, $data);
@@ -80,10 +79,6 @@ class Submenu extends CI_Controller {
     $this->submenu->delete_by_id($id);
     echo json_encode(array("status" => TRUE));
   }
-
-
-
-
 
 
 

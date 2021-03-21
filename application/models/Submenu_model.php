@@ -115,21 +115,4 @@ class Submenu_model extends CI_Model {
   }
 
 
-
-  public function getMenu() {
-    return $this->db->get('menu')->result_array();
-  }
-
-
-
-
-  public function getSubMenu() {
-    $query = "
-	  SELECT * FROM sub_menu
-	  INNER JOIN menu
-	  ON sub_menu.menu_id = menu.id
-	  ";
-    return $this->db->query($query)->result_array();
-  }
-
 }
