@@ -1,3 +1,6 @@
+<?php $this->load->view('layout/_datatables.php'); ?>
+
+
 <div class="row">
   <div class="col-md-4">
     <!-- TABLE STRIPED -->
