@@ -16,6 +16,15 @@ class Menu extends CI_Controller {
   }
 
 
+  public function urutan()
+  {
+    $page = 'menu/urutan_menu';
+    $data['menu'] = $this->db->get('menu')->result_array();
+    $data['title'] = 'Urutan Menu';
+    pages($page, $data);
+  }
+
+
   public function ajaxList() {
     $list = $this->menu->get_datatables();
     $data = [];

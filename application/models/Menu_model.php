@@ -8,7 +8,7 @@ class Menu_Model extends CI_Model {
     'menu',
     'title',
     'icon',
-    'tile',
+    'tipe',
     null];
   var $column_search = ['menu',
     'title',

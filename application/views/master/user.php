@@ -2,7 +2,7 @@
 
 
 <div class="row">
-  <div class="col-md-10">
+  <div class="col-md-12">
     <!-- TABLE STRIPED -->
     <div class="panel">
       <div class="panel-body">
@@ -14,6 +14,10 @@
               <th>No</th>
               <th>Nama</th>
               <th>Email</th>
+              <th>Foto Profile</th>
+              <th>Role</th>
+              <th>Akun Dibuat</th>
+              <th>Status Aktif</th>
               <th>Opsi</th>
             </tr>
           </thead>
@@ -31,7 +35,33 @@
 <script>
   var save_method; //for save method string
   var table;
+
+  function coba(id,status)
+  {
+
+    $.ajax({
+      url: "<?= site_url('master/user/status/');?>"+id,
+      type:"post",
+      data: {id : id,status:status},
+      success: function()
+      {
+        reload_table();
+        if (status == 0) {
+          toastr.success('User Telah diAktifkan');
+        } else
+        {
+          toastr.success('User Telah Diblokir');
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert('Error get data from ajax');
+      }
+    });
+
+  }
+
   $(document).ready(function() {
+
 
     table = $('#table').DataTable({
 
@@ -70,6 +100,7 @@
   function edit(id) {
     save_method = 'update';
     $('#form')[0].reset(); // reset form on modals
+    $('.password').html('<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="">Ganti Passoword</a>');
 
     //Ajax Load data from ajax
     $.ajax({
@@ -81,6 +112,8 @@
         $('[name="id"]').val(data.id);
         $('[name="nama"]').val(data.nama);
         $('[name="email"]').val(data.email);
+        $('[name="avatar"]').val(data.avatar);
+        $('[name="role_id"]').val(data.role_id);
 
         $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
         $('.modal-title').text('Edit User'); // Set title to Bootstrap modal title
@@ -130,7 +163,7 @@
     });
   }
 
-  function delete_menu(id) {
+  function delete_user(id) {
 
     swal({
       title: 'Are you sure?',
@@ -154,7 +187,7 @@
             $('#modal_form').modal('hide');
             reload_table();
             swal.close();
-            toastr.success('Master Baru saja dihapus');
+            toastr.success('User Baru saja dihapus');
           },
           error: function (jqXHR, textStatus, errorThrown) {
             alert('Error adding / update data');
@@ -194,6 +227,24 @@
               <div class="col-md-9">
                 <input name="email" placeholder="Alamat Email" class="form-control" type="email">
               </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-2">Passoword</label>
+              <div class="col-md-9 password">
+                <input name="password" placeholder="Alamat Email" class="form-control" type="text" value="123">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-2">Role</label>
+              <div class="col-md-9">
+                <select class="form-control" name="role_id" id="datarole">
+                  <option>--- Role ---</option>
+                  <?php foreach ($role as $r) : ?>
+                  <option value="<?= $r['id']; ?>" datarole="<?= $r['role']; ?>" id="role"><?= $r['role']; ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              
             </div>
           </div>
         </form>

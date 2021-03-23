@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Waktu pembuatan: 23 Mar 2021 pada 15.45
--- Versi server: 5.6.38
--- Versi PHP: 7.3.3
+-- Host: 127.0.0.1
+-- Generation Time: Mar 23, 2021 at 08:18 PM
+-- Server version: 10.4.17-MariaDB
+-- PHP Version: 7.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `menu`
+-- Table structure for table `menu`
 --
 
 CREATE TABLE `menu` (
@@ -37,20 +37,20 @@ CREATE TABLE `menu` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data untuk tabel `menu`
+-- Dumping data for table `menu`
 --
 
 INSERT INTO `menu` (`id`, `menu`, `title`, `icon`, `tipe`, `urutan`) VALUES
-(7, 'Dashboard', 'Dashboard', 'fa  fa-tachometer', 1, 1),
-(20, 'sistem', 'system', 'fa fa-cogs', 2, 2),
-(23, 'profile', 'Profile saya', 'fa fa-user', 1, 3),
-(24, 'master', 'Data Master', 'fa fa-user', 2, 4),
-(25, 'home', 'Home', 'fa fa-user', 1, 0);
+(7, 'Dashboard', 'Dashboard', 'fa  fa-tachometer', 1, 2),
+(20, 'sistem', 'system', 'fa fa-cogs', 2, 3),
+(23, 'profile', 'Profile saya', 'fa fa-user', 1, 4),
+(24, 'master', 'Data Master', 'fa fa-user', 2, 5),
+(25, 'home', 'Home', 'fa fa-user', 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `role`
+-- Table structure for table `role`
 --
 
 CREATE TABLE `role` (
@@ -59,7 +59,7 @@ CREATE TABLE `role` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data untuk tabel `role`
+-- Dumping data for table `role`
 --
 
 INSERT INTO `role` (`id`, `role`) VALUES
@@ -69,7 +69,7 @@ INSERT INTO `role` (`id`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `role_menu`
+-- Table structure for table `role_menu`
 --
 
 CREATE TABLE `role_menu` (
@@ -79,7 +79,7 @@ CREATE TABLE `role_menu` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data untuk tabel `role_menu`
+-- Dumping data for table `role_menu`
 --
 
 INSERT INTO `role_menu` (`id`, `menu_id`, `role_id`) VALUES
@@ -93,7 +93,7 @@ INSERT INTO `role_menu` (`id`, `menu_id`, `role_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `sub_menu`
+-- Table structure for table `sub_menu`
 --
 
 CREATE TABLE `sub_menu` (
@@ -106,7 +106,7 @@ CREATE TABLE `sub_menu` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data untuk tabel `sub_menu`
+-- Dumping data for table `sub_menu`
 --
 
 INSERT INTO `sub_menu` (`id`, `menu_id`, `title`, `icon`, `url`, `is_active`) VALUES
@@ -126,7 +126,7 @@ INSERT INTO `sub_menu` (`id`, `menu_id`, `title`, `icon`, `url`, `is_active`) VA
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -142,18 +142,18 @@ CREATE TABLE `user` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data untuk tabel `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `nama`, `email`, `password`, `avatar`, `limit_salah`, `is_active`, `role_id`, `created_at`) VALUES
 (7, 'Abror', 'admin@admin.com', '$2y$10$ZJw81E.99/NXniwJMovdoOl57J9ZBBQi7/4tdbyDoivOZumJXb0Mm', 'SAVE_20210315_144413.jpg', 3, 1, 1, 1613835483),
 (14, 'Muhammad Alhiqny Bil Abror', 'muhammadalhiqny@gmail.com', '$2y$10$lc/UdoVMBzD26RaP0IBbnenpUJQeXTsW7Mu9zc.lZ7/E6H9ng8E1u', 'avatar.png', 0, 1, 2, 1616333737),
-(11, 'Alhiqny', 'usepfesbuk@gmail.com', '$2y$10$/FIzFbBG0zAw97.c93S8UehO9Maki3ZnPVsL2Z98Qh/BtCMfP5Rn6', 'avatar.png', 0, 1, 2, 1616001272);
+(18, 'Nadi Adsh', 'nadi@gmail.com', '$2y$10$NGJ5Jn9KOEuJBjc7MsX85uZIRVcLWGMTiz.vwjztfwi2kT9XxO5gG', 'avatar.png', 0, 1, 1, 1616522833);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user_token`
+-- Table structure for table `user_token`
 --
 
 CREATE TABLE `user_token` (
@@ -168,77 +168,77 @@ CREATE TABLE `user_token` (
 --
 
 --
--- Indeks untuk tabel `menu`
+-- Indexes for table `menu`
 --
 ALTER TABLE `menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `role`
+-- Indexes for table `role`
 --
 ALTER TABLE `role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `role_menu`
+-- Indexes for table `role_menu`
 --
 ALTER TABLE `role_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `sub_menu`
+-- Indexes for table `sub_menu`
 --
 ALTER TABLE `sub_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `user_token`
+-- Indexes for table `user_token`
 --
 ALTER TABLE `user_token`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `menu`
+-- AUTO_INCREMENT for table `menu`
 --
 ALTER TABLE `menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT untuk tabel `role`
+-- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
--- AUTO_INCREMENT untuk tabel `role_menu`
+-- AUTO_INCREMENT for table `role_menu`
 --
 ALTER TABLE `role_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT untuk tabel `sub_menu`
+-- AUTO_INCREMENT for table `sub_menu`
 --
 ALTER TABLE `sub_menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT untuk tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT untuk tabel `user_token`
+-- AUTO_INCREMENT for table `user_token`
 --
 ALTER TABLE `user_token`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

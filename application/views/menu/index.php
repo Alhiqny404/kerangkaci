@@ -6,7 +6,8 @@
     <!-- TABLE STRIPED -->
     <div class="panel">
       <div class="panel-body">
-        <button type="button" class="add btn btn-primary btn-sm" onclick="add()">Tambah menu</button>
+        <button type="button" class="add btn btn-primary btn-sm" onclick="add()">Tambah Menu</button>
+        <a href="<?=site_url('sistem/menu/urutan');?>" class="add btn btn-warning btn-sm">Urutkan Menu</a>
         <br><br>
         <table class="table table-striped table-hover table-sm" id="table">
           <thead>

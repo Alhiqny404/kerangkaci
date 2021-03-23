@@ -45,7 +45,6 @@
   let save_method; //for save method string
   let table;
   $(document).ready(function() {
-    console.log(1);
     $('#tablerole').DataTable();
   });
 

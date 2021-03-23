@@ -11,10 +11,32 @@ class User extends CI_Controller {
 
   public function index() {
     $page = 'master/user';
+    $data['role'] = $this->db->get('role')->result_array();
     $data['title'] = 'Data User';
     pages($page, $data);
   }
 
+
+  public function status()
+  {
+    $id = $this->input->post('id');
+    $status = $this->input->post('status');
+
+
+    if($status == 1)
+    {
+      $status = 0;
+      $this->user->update(['id'=>$id],['is_active'=>$status]);
+      echo json_encode(array("status" => TRUE));
+    }
+    else
+    {
+      $status = 1;
+      $this->user->update(['id'=>$id],['is_active'=>$status]);
+      echo json_encode(array("status" => TRUE));
+    }
+
+  }
 
   public function ajaxList() {
     $list = $this->user->get_datatables();
@@ -26,11 +48,24 @@ class User extends CI_Controller {
       $row[] = $no;
       $row[] = $ls->nama;
       $row[] = $ls->email;
+      $row[] = '<img src="'.base_url("uploads/image/profile/".$ls->avatar).'" width="70px">';
+      $row[] = $ls->role;
+      $row[] = date('d-m-Y',$ls->created_at);
+      if($ls->is_active == 1)
+      {
+      $row[] = '<input id="checkbox" class="form-check-input" type="checkbox" checked="checked" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')">';
+      }
+      else
+      {
+        $row[] = '<input id="checkbox" class="form-check-input" type="checkbox" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')">';
+      }
+
 
       //add html for action
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
-             onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i> edit</a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
-                  onclick="delete_user('."'".$ls->id."'".','."'".$ls->nama."'".')"><i class="fa fa-trash"> hapus</i></a>';
+             onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i></a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
+                  onclick="delete_user('."'".$ls->id."'".','."'".$ls->nama."'".')"><i class="fa fa-trash"> </i></a><a class="btn btn-sm btn-info" href="javascript:void(0)" title="detail"
+             onclick=""><i class="fa fa-eye"></i></a>';
 
 
       $data[] = $row;
@@ -51,8 +86,14 @@ class User extends CI_Controller {
   }
   public function ajax_add() {
     $data = array(
-      'user' => $this->input->post('nama'),
-      'title' => $this->input->post('email')
+      'nama' => htmlspecialchars($this->input->post('nama'), true),
+      'email' => htmlspecialchars($this->input->post('email'), true),
+      'avatar' => 'avatar.png',
+      'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+      'limit_salah' => 0,
+      'is_active' => 1,
+      'role_id' => htmlspecialchars($this->input->post('role_id'), true),
+      'created_at' => time()
     );
 
     $insert = $this->user->save($data);
@@ -60,8 +101,9 @@ class User extends CI_Controller {
   }
   public function ajax_update() {
     $data = array(
-      'user' => $this->input->post('nama'),
-      'title' => $this->input->post('email')
+      'nama' => htmlspecialchars($this->input->post('nama'), true),
+      'email' => htmlspecialchars($this->input->post('email'), true),
+      'role_id' => htmlspecialchars($this->input->post('role_id'), true)
     );
     $this->user->update(array('id' => $this->input->post('id')), $data);
     echo json_encode(array("status" => TRUE));

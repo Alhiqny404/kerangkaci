@@ -7,9 +7,15 @@ class User_model extends CI_Model {
   var $column_order = [null,
     'nama',
     'email',
+    'avatar',
+    'role',
+    'created_at',
+    'is_active',
     null];
   var $column_search = ['nama',
-    'email'];
+    'email',
+    'role',
+    'created_at'];
   var $order = ['nama' => 'asc'];
 
   public function __construct() {
@@ -18,7 +24,9 @@ class User_model extends CI_Model {
   }
 
   private function _get_datatables_query() {
+    $this->db->select('user.*,role.role');
     $this->db->from($this->table);
+    $this->db->join('role', 'user.role_id = role.id');
     $i = 0;
 
     foreach ($this->column_search as $item) {
