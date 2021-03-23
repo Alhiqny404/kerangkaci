@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 19 Mar 2021 pada 15.43
+-- Waktu pembuatan: 23 Mar 2021 pada 15.45
 -- Versi server: 5.6.38
 -- Versi PHP: 7.3.3
 
@@ -29,19 +29,23 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `menu` (
   `id` int(11) NOT NULL,
-  `menu` varchar(100) NOT NULL
+  `menu` varchar(100) NOT NULL,
+  `title` varchar(128) NOT NULL,
+  `icon` varchar(128) NOT NULL,
+  `tipe` int(1) NOT NULL,
+  `urutan` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data untuk tabel `menu`
 --
 
-INSERT INTO `menu` (`id`, `menu`) VALUES
-(1, 'Admin'),
-(2, 'User'),
-(3, 'Menu'),
-(7, 'Dashboard'),
-(9, 'ajax');
+INSERT INTO `menu` (`id`, `menu`, `title`, `icon`, `tipe`, `urutan`) VALUES
+(7, 'Dashboard', 'Dashboard', 'fa  fa-tachometer', 1, 1),
+(20, 'sistem', 'system', 'fa fa-cogs', 2, 2),
+(23, 'profile', 'Profile saya', 'fa fa-user', 1, 3),
+(24, 'master', 'Data Master', 'fa fa-user', 2, 4),
+(25, 'home', 'Home', 'fa fa-user', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -60,8 +64,7 @@ CREATE TABLE `role` (
 
 INSERT INTO `role` (`id`, `role`) VALUES
 (1, 'Admin'),
-(2, 'User'),
-(25, '');
+(2, 'User');
 
 -- --------------------------------------------------------
 
@@ -80,12 +83,12 @@ CREATE TABLE `role_menu` (
 --
 
 INSERT INTO `role_menu` (`id`, `menu_id`, `role_id`) VALUES
-(1, 1, 1),
-(7, 2, 1),
-(3, 2, 2),
-(4, 3, 1),
-(9, 7, 1),
-(11, 9, 1);
+(29, 24, 1),
+(27, 25, 2),
+(19, 23, 2),
+(25, 23, 1),
+(17, 20, 1),
+(23, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -113,7 +116,12 @@ INSERT INTO `sub_menu` (`id`, `menu_id`, `title`, `icon`, `url`, `is_active`) VA
 (4, 3, 'Sub Menu', 'fas fa-fw fa-folder-open', 'dashboard/system/submenu', 1),
 (5, 1, 'Role', 'fas fa-fw fa-user', 'dashboard/role', 1),
 (6, 2, 'Edit Profile', 'fas fa-fw fa-user-edit', 'user/edit', 1),
-(10, 2, 'Ganti Password', 'fa fw fa-edit', 'user/ganti-password', 1);
+(10, 2, 'Ganti Password', 'fa fw fa-edit', 'user/ganti-password', 1),
+(16, 20, 'Aplikasi', 'fa fa-user', 'sistem/aplikasi', 0),
+(17, 20, 'Menu', 'fas fa-fw fa-user', 'sistem/menu', 0),
+(18, 20, 'submenu', 'fas fa-fw fa-tachometer-alt', 'sistem/submenu', 0),
+(20, 20, 'Role', 'fas fa-fw fa-user', 'sistem/role', 0),
+(21, 24, 'Data User', 'fas fa-fw fa-user', 'master/user', 0);
 
 -- --------------------------------------------------------
 
@@ -138,8 +146,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `nama`, `email`, `password`, `avatar`, `limit_salah`, `is_active`, `role_id`, `created_at`) VALUES
-(7, 'Abror', 'admin@admin.com', '$2y$10$g/GlBAqUD65R/5WL2ExR7uf3a/O0zloxDWhV9O8075kgO5LpoioNq', 'avatar.png', 0, 1, 1, 1613835483),
-(12, 'Abror', 'muhammadalhiqny@gmail.com', '$2y$10$UdEo4IfHh8hTel9/m8IWg.rjJFc6aRObFRsWbctjfPP/Hbm07WCgS', 'avatar.png', 0, 0, 2, 1616001320),
+(7, 'Abror', 'admin@admin.com', '$2y$10$ZJw81E.99/NXniwJMovdoOl57J9ZBBQi7/4tdbyDoivOZumJXb0Mm', 'SAVE_20210315_144413.jpg', 3, 1, 1, 1613835483),
+(14, 'Muhammad Alhiqny Bil Abror', 'muhammadalhiqny@gmail.com', '$2y$10$lc/UdoVMBzD26RaP0IBbnenpUJQeXTsW7Mu9zc.lZ7/E6H9ng8E1u', 'avatar.png', 0, 1, 2, 1616333737),
 (11, 'Alhiqny', 'usepfesbuk@gmail.com', '$2y$10$/FIzFbBG0zAw97.c93S8UehO9Maki3ZnPVsL2Z98Qh/BtCMfP5Rn6', 'avatar.png', 0, 1, 2, 1616001272);
 
 -- --------------------------------------------------------
@@ -154,13 +162,6 @@ CREATE TABLE `user_token` (
   `token` varchar(128) NOT NULL,
   `created_at` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `user_token`
---
-
-INSERT INTO `user_token` (`id`, `email`, `token`, `created_at`) VALUES
-(4, 'muhammadalhiqny@gmail.com', 'DlaZ4SRIiA4yCUNlv7/pAtk9yphBZLU1u2ZGxwfwmvY=', 1616001320);
 
 --
 -- Indexes for dumped tables
@@ -210,37 +211,37 @@ ALTER TABLE `user_token`
 -- AUTO_INCREMENT untuk tabel `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT untuk tabel `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT untuk tabel `role_menu`
 --
 ALTER TABLE `role_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT untuk tabel `sub_menu`
 --
 ALTER TABLE `sub_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_token`
 --
 ALTER TABLE `user_token`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
