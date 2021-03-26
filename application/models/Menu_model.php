@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Menu_Model extends CI_Model {
 
   var $table = 'menu';
-  var $column_order = [null,
+  var $column_order = ['urutan',
     'menu',
     'title',
     'icon',
@@ -13,8 +13,9 @@ class Menu_Model extends CI_Model {
   var $column_search = ['menu',
     'title',
     'icon',
-    'tipe'];
-  var $order = ['menu' => 'asc'];
+    'tipe',
+    'urutan'];
+  var $order = ['urutan' => 'asc'];
 
   public function __construct() {
     parent::__construct();

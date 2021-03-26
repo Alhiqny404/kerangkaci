@@ -12,18 +12,69 @@ class Menu extends CI_Controller {
   public function index() {
     $page = 'menu/index';
     $data['title'] = 'Menu Group';
-    pages($page, $data);
+    $this->load->view('menu/index', $data);
   }
 
 
-  public function urutan()
-  {
+  public function urutan() {
     $page = 'menu/urutan_menu';
     $data['menu'] = $this->db->get('menu')->result_array();
     $data['title'] = 'Urutan Menu';
-    pages($page, $data);
+    $this->load->view('menu/urutan_menu', $data);
   }
 
+  public function naikan() {
+    $id = $this->input->post('id');
+    $urutan = $this->input->post('urutan');
+    if ($urutan == 1) {
+      echo json_encode(array("status" => TRUE));
+    } else {
+      $this->db->update('menu', ['urutan' => $urutan], ['urutan' => $urutan-1]);
+      $data = array(
+        'urutan' => $urutan-1
+      );
+      $this->menu->update(array('id' => $id), $data);
+      echo json_encode(array("status" => TRUE));
+    }
+  }
+
+
+  public function turunkan() {
+    $id = $this->input->post('id');
+    $urutan = $this->input->post('urutan');
+    $this->db->update('menu', ['urutan' => $urutan], ['urutan' => $urutan+1]);
+    $data = array(
+      'urutan' => $urutan+1
+    );
+    $this->menu->update(array('id' => $id), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+
+
+  public function ajaxUrutan() {
+    $list = $this->menu->get_datatables();
+    $data = [];
+    $no = $_POST['start'];
+    foreach ($list as $ls) {
+      $no++;
+      $row = [];
+      $row[] = $ls->urutan;
+      $row[] = $ls->menu;
+      $row[] = '<button class="btn btn-sm btn-success" onclick="naikan('."'".$ls->id."'".','."'".$ls->urutan."'".')">Naikan</button> <button class="btn btn-sm btn-danger" onclick="turunkan('."'".$ls->id."'".','."'".$ls->urutan."'".')">Turunkan</button>';
+
+      $data[] = $row;
+    }
+
+    $output = [
+      "draw" => $_POST['draw'],
+      "recordsTotal" => $this->menu->count_all(),
+      "recordsFiltered" => $this->menu->count_filtered(),
+      "data" => $data,
+    ];
+    //output to json format
+    echo json_encode($output);
+  }
 
   public function ajaxList() {
     $list = $this->menu->get_datatables();
@@ -32,7 +83,7 @@ class Menu extends CI_Controller {
     foreach ($list as $ls) {
       $no++;
       $row = [];
-      $row[] = $no;
+      $row[] = $ls->urutan;
       $row[] = $ls->menu;
       $row[] = $ls->title;
       $row[] = $ls->icon;
@@ -65,6 +116,46 @@ class Menu extends CI_Controller {
     echo json_encode($data);
   }
   public function ajax_add() {
+
+
+    $this->form_validation->set_rules('memu', 'Menu', 'required|min_length[3]',
+      [
+        'required' => 'role tidak boleh kosong',
+        'min_length' => 'nama role terlalu pendek'
+      ]
+    );
+    $this->form_validation->set_rules('title', 'Title', 'required|min_length[3]',
+      [
+        'required' => 'role tidak boleh kosong',
+        'min_length' => 'nama role terlalu pendek'
+      ]
+    );
+    $this->form_validation->set_rules('icon', 'Icon', 'required|min_length[3]',
+      [
+        'required' => 'role tidak boleh kosong',
+        'min_length' => 'nama role terlalu pendek'
+      ]
+    );
+    $this->form_validation->set_rules('tipe', 'Tipe', 'required',
+      [
+        'required' => 'role tidak boleh kosong'
+      ]
+    );
+
+    if ($this->form_validation->run() == FALSE) {
+      $errors = validation_errors();
+      echo json_encode(["status" => FALSE, 'errors' => $errors]);
+    } else
+    {
+      $data = ['role' => $this->input->post('role')];
+      $insert = $this->role->save($data);
+      echo json_encode(["status" => TRUE]);
+    }
+
+
+
+
+
     $data = array(
       'menu' => $this->input->post('menu'),
       'title' => $this->input->post('title'),

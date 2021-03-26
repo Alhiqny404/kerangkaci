@@ -1,0 +1,38 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+?>
+<div class="main-sidebar sidebar-style-2">
+  <aside id="sidebar-wrapper">
+    <div class="sidebar-brand">
+      <a href="<?= base_url(); ?>dist/index">Stisla</a>
+    </div>
+    <div class="sidebar-brand sidebar-brand-sm">
+      <a href="<?= base_url(); ?>dist/index">St</a>
+    </div>
+    <ul class="sidebar-menu">
+      <?php foreach (menu() as $m) : ?>
+
+      <?php if ($m['tipe'] < 2) : ?>
+
+      <li class="<?= $this->uri->segment(2) == 'blank' ? 'active' : ''; ?>"><a class="nav-link" href="<?=base_url($m['menu']); ?>"><i class="<?=$m['icon']; ?>"></i> <span><?= $m['title']; ?></span></a></li>
+
+      <?php else : ?>
+
+      <li class="dropdown<?= $this->uri->segment(2) == 'layout_default' || $this->uri->segment(2) == 'layout_transparent' || $this->uri->segment(2) == 'layout_top_navigation' ? 'active' : ''; ?>">
+        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="<?=$m['icon']; ?>"></i> <span><?=$m['title']; ?></span></a>
+        <ul class="dropdown-menu">
+          <?php foreach (submenu($m['id']) as $sm): ?>
+          <li class="<?= $this->uri->segment(2) == 'layout_default' ? 'active' : ''; ?>"><a class="nav-link" href="<?=base_url($sm['url']); ?>"><?=$sm['title']; ?></a></li>
+          <?php endforeach; ?>
+        </ul>
+      </li>
+
+      <?php endif; ?>
+      <?php endforeach; ?>
+
+
+
+    </ul>
+
+  </aside>
+</div>

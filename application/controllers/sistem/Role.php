@@ -16,7 +16,8 @@ class Role extends CI_Controller {
     $data['role'] = $this->db->get('role')->result_array();
     $page = 'admin/role';
     $data['title'] = 'Role';
-    pages($page, $data);
+    //pages($page, $data);
+    $this->load->view('admin/role', $data);
   }
 
   public function akses($id) {
@@ -54,14 +55,15 @@ class Role extends CI_Controller {
     foreach ($list as $ls) {
       $no++;
       $row = [];
+      $row[] = '<div class="custom-checkbox custom-control"><input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="'.$ls->id.'"><label for="'.$ls->id.'" class="custom-control-label">&nbsp;</label></div>';
       $row[] = $no;
       $row[] = $ls->role;
 
       //add html for action
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
-             onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i> edit</a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
-                  onclick="delete_role('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-trash"> hapus</i></a><a class="btn btn-sm btn-warning" href="javascript:void(0)"
-                  onclick="akses('."'".$ls->id."'".')"><i class="fa fa-eye"> role akses</i></a>';
+             onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i></a> <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
+                  onclick="delete_role('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-trash"></i></a> <a class="btn btn-sm btn-warning" href="javascript:void(0)"
+                  onclick="akses('."'".$ls->id."'".')"><i class="fa fa-universal-access"></i></a>';
 
       $data[] = $row;
     }
@@ -80,19 +82,48 @@ class Role extends CI_Controller {
     echo json_encode($data);
   }
   public function ajax_add() {
-    $data = array(
-      'role' => $this->input->post('role')
+
+
+
+    $this->form_validation->set_rules('role', 'Role', 'required|min_length[3]',
+      [
+        'required' => 'role tidak boleh kosong',
+        'min_length' => 'nama role terlalu pendek'
+      ]
     );
 
-    $insert = $this->role->save($data);
-    echo json_encode(array("status" => TRUE));
+    if ($this->form_validation->run() == FALSE) {
+      $errors = validation_errors();
+      echo json_encode(["status" => FALSE, 'errors' => $errors]);
+    } else
+    {
+      $data = ['role' => $this->input->post('role')];
+      $insert = $this->role->save($data);
+      echo json_encode(["status" => TRUE]);
+    }
+
+
   }
   public function ajax_update() {
-    $data = array(
-      'role' => $this->input->post('role')
+
+
+    $this->form_validation->set_rules('role', 'Role', 'required|min_length[3]',
+      [
+        'required' => 'role tidak boleh kosong',
+        'min_length' => 'nama role terlalu pendek'
+      ]
     );
-    $this->role->update(array('id' => $this->input->post('id')), $data);
-    echo json_encode(array("status" => TRUE));
+
+    if ($this->form_validation->run() == FALSE) {
+      $errors = validation_errors();
+      echo json_encode(["status" => FALSE, 'errors' => $errors]);
+    } else
+    {
+      $data = ['role' => $this->input->post('role')];
+      $this->role->update(array('id' => $this->input->post('id')), $data);
+      echo json_encode(array("status" => TRUE));
+    }
+
   }
   public function ajax_delete($id) {
     $this->role->delete_by_id($id);

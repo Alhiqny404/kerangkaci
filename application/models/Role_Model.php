@@ -5,6 +5,7 @@ class Role_Model extends CI_Model {
 
   var $table = 'role';
   var $column_order = [null,
+    null,
     'role',
     null];
   var $column_search = ['role'];

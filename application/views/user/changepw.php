@@ -8,7 +8,7 @@
           <a href="<?= site_url('profile'); ?>" class="add mb-4 btn btn-primary mt-3" style="background-color: #00aaff;padding:5px 10px">Kembali</a>
         </div>
 
-        <form class="form" method="post" action="<?= site_url('user/changepw/'); ?>">
+        <form class="form" method="post" action="<?= site_url('profile/changepw/'); ?>">
           <div class="form-group">
             <label for="passwordlama">Password Lama</label>
             <input type="password" class="form-control" id="passwordlama" name="passwordlama">

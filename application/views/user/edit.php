@@ -7,10 +7,10 @@
     <div class="panel">
       <div class="panel-heading" style="display: flex;justify-content: space-between;">
         <h3 class="panel-title"><?=$title; ?></h3>
-        <a href="<?= site_url('profile'); ?>" class="add mb-4 btn btn-primary mt-3" onclick="tambah()" style="background-color: #00aaff;padding:5px 10px">Kembali</a>
+        <a href="<?= site_url('profile'); ?>" class="add mb-4 btn btn-primary mt-3" style="background-color: #00aaff;padding:5px 10px">Kembali</a>
       </div>
       <div class="panel-body">
-        <?= form_open_multipart('user/update'); ?>
+        <?= form_open_multipart('profile/update'); ?>
         <div class="form-group">
           <label for="email">Alamat Email</label>
           <input type="email" class="form-control" id="email" name="email" readonly value="<?= $user['email']; ?>">

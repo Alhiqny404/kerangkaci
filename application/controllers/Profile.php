@@ -56,7 +56,7 @@ class Profile extends CI_Controller {
     $this->db->update('user');
 
 
-    redirect('user/edit');
+    redirect('profile/edit');
   }
 
   public function changepw() {
@@ -100,13 +100,13 @@ class Profile extends CI_Controller {
           $this->db->update('user');
           echo 'password berhasil diubah';
           $this->session->set_flashdata('!passwordlama', "<script>swal('Good job!','Password Berhasil Diubah!','success')</script>");
-          redirect('user/changepw');
+          redirect('profile/changepw');
 
         }
       } else
       {
         $this->session->set_flashdata('!passwordlama', '<small class="text-danger pl-3">Password Lama Salah</small>');
-        redirect('user/changepw');
+        redirect('profile/changepw');
       }
     }
   }
