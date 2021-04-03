@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
-<div class="main-sidebar sidebar-style-2">
+<div class="main-sidebar sidebar-style-2" style="background:<?= aplikasi()['color_sidebar']; ?>;">
   <aside id="sidebar-wrapper">
     <div class="sidebar-brand">
-      <a href="<?= base_url(); ?>dist/index">Stisla</a>
+      <a href="<?= site_url(); ?>dist/index"><?= aplikasi()['name_app']; ?></a>
     </div>
     <div class="sidebar-brand sidebar-brand-sm">
-      <a href="<?= base_url(); ?>dist/index">St</a>
+      <a href="<?= site_url(); ?>dist/index"><?= substr(aplikasi()['name_app'], 0, 1); ?></a>
     </div>
     <ul class="sidebar-menu">
       <?php foreach (menu() as $m) : ?>
@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="<?=$m['icon']; ?>"></i> <span><?=$m['title']; ?></span></a>
         <ul class="dropdown-menu">
           <?php foreach (submenu($m['id']) as $sm): ?>
-          <li class="<?= $this->uri->segment(2) == 'layout_default' ? 'active' : ''; ?>"><a class="nav-link" href="<?=base_url($sm['url']); ?>"><?=$sm['title']; ?></a></li>
+          <li class="<?= $this->uri->segment(2) == 'layout_default' ? 'active' : ''; ?>"><a class="nav-link" href="<?=base_url($sm['url']); ?>"><i class="<?=$sm['icon']; ?>"></i> <?=$sm['title']; ?></a></li>
           <?php endforeach; ?>
         </ul>
       </li>

@@ -7,6 +7,7 @@ class Menu extends CI_Controller {
     parent::__construct();
     $this->load->model('Menu_model', 'menu');
     harus_login();
+    akses_submenu();
   }
 
   public function index() {
@@ -117,38 +118,73 @@ class Menu extends CI_Controller {
   }
   public function ajax_add() {
 
+    $menu = $this->input->post('menu');
 
-    $this->form_validation->set_rules('memu', 'Menu', 'required|min_length[3]',
+
+    $this->form_validation->set_rules('menu', 'Menu', 'required|min_length[3]',
       [
-        'required' => 'role tidak boleh kosong',
-        'min_length' => 'nama role terlalu pendek'
+        'required' => 'menu tidak boleh kosong',
+        'min_length' => 'nama menu terlalu pendek'
       ]
     );
     $this->form_validation->set_rules('title', 'Title', 'required|min_length[3]',
       [
-        'required' => 'role tidak boleh kosong',
-        'min_length' => 'nama role terlalu pendek'
+        'required' => 'title tidak boleh kosong',
+        'min_length' => 'nama title terlalu pendek'
       ]
     );
     $this->form_validation->set_rules('icon', 'Icon', 'required|min_length[3]',
       [
-        'required' => 'role tidak boleh kosong',
-        'min_length' => 'nama role terlalu pendek'
+        'required' => 'icon tidak boleh kosong',
+        'min_length' => 'nama icon terlalu pendek'
       ]
     );
     $this->form_validation->set_rules('tipe', 'Tipe', 'required',
       [
-        'required' => 'role tidak boleh kosong'
+        'required' => 'tipe tidak boleh kosong'
       ]
     );
 
     if ($this->form_validation->run() == FALSE) {
-      $errors = validation_errors();
-      echo json_encode(["status" => FALSE, 'errors' => $errors]);
+      $err = [
+        'menu' => form_error('menu'),
+        'title' => form_error('title'),
+        'icon' => form_error('icon'),
+        'tipe' => form_error('tipe')
+      ];
+      echo json_encode(["status" => FALSE, 'err' => $err]);
     } else
     {
-      $data = ['role' => $this->input->post('role')];
-      $insert = $this->role->save($data);
+      $i = $this->db->query('SELECT max(urutan) FROM menu')->row_array();
+      $urutan = $i['max(urutan)']+1;
+      $data = [
+        'menu' => htmlspecialchars($this->input->post('menu'), true),
+        'title' => htmlspecialchars($this->input->post('title'), true),
+        'icon' => htmlspecialchars($this->input->post('icon'), true),
+        'tipe' => htmlspecialchars($this->input->post('tipe'), true),
+        'urutan' => htmlspecialchars($urutan, true)
+      ];
+      $insert = $this->menu->save($data);
+
+      $this->load->helper('file');
+
+      if ($this->input->post('tipe') == 1) {
+
+        $data = "
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class ".ucwords($menu)." extends CI_Controller {
+
+
+}";
+
+        write_file("./application/controllers/".ucwords($menu).".php", $data);
+
+      }
+
+
+
       echo json_encode(["status" => TRUE]);
     }
 
@@ -156,25 +192,55 @@ class Menu extends CI_Controller {
 
 
 
-    $data = array(
-      'menu' => $this->input->post('menu'),
-      'title' => $this->input->post('title'),
-      'icon' => $this->input->post('icon'),
-      'tipe' => $this->input->post('tipe')
-    );
-
-    $insert = $this->menu->save($data);
-    echo json_encode(array("status" => TRUE));
   }
   public function ajax_update() {
-    $data = array(
-      'menu' => $this->input->post('menu'),
-      'title' => $this->input->post('title'),
-      'icon' => $this->input->post('icon'),
-      'tipe' => $this->input->post('tipe')
+
+
+    $this->form_validation->set_rules('menu', 'Menu', 'required|min_length[3]',
+      [
+        'required' => 'menu tidak boleh kosong',
+        'min_length' => 'nama menu terlalu pendek'
+      ]
     );
-    $this->menu->update(array('id' => $this->input->post('id')), $data);
-    echo json_encode(array("status" => TRUE));
+    $this->form_validation->set_rules('title', 'Title', 'required|min_length[3]',
+      [
+        'required' => 'title tidak boleh kosong',
+        'min_length' => 'nama title terlalu pendek'
+      ]
+    );
+    $this->form_validation->set_rules('icon', 'Icon', 'required|min_length[3]',
+      [
+        'required' => 'icon tidak boleh kosong',
+        'min_length' => 'nama icon terlalu pendek'
+      ]
+    );
+    $this->form_validation->set_rules('tipe', 'Tipe', 'required',
+      [
+        'required' => 'tipe tidak boleh kosong'
+      ]
+    );
+
+    if ($this->form_validation->run() == FALSE) {
+      $err = [
+        'menu' => form_error('menu'),
+        'title' => form_error('title'),
+        'icon' => form_error('icon'),
+        'tipe' => form_error('tipe')
+      ];
+      echo json_encode(["status" => FALSE, 'err' => $err]);
+    } else
+    {
+      $data = [
+        'menu' => htmlspecialchars($this->input->post('menu'), true),
+        'title' => htmlspecialchars($this->input->post('title'), true),
+        'icon' => htmlspecialchars($this->input->post('icon'), true),
+        'tipe' => htmlspecialchars($this->input->post('tipe'), true)
+      ];
+
+      $this->menu->update(array('id' => $this->input->post('id')), $data);
+      echo json_encode(array("status" => TRUE));
+    }
+
   }
   public function ajax_delete($id) {
     $this->menu->delete_by_id($id);

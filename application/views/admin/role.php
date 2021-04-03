@@ -30,12 +30,6 @@
                 <table class="table table-striped table-hover table-sm" id="table">
                   <thead class="text-center">
                     <tr>
-                      <th>
-                        <div class="custom-checkbox custom-control">
-                          <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad" class="custom-control-input" id="checkbox-all">
-                          <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
-                        </div>
-                      </th>
                       <th>No</th>
                       <th>Role</th>
                       <th>opsi</th>
@@ -245,16 +239,15 @@
             <div class="form-group">
               <label class="control-label">Role</label>
               <input name="role" placeholder="Role" id="role" class="form-control inputan" type="text">
-              <div class="invalid-feedback">
-                Please choose a username.
-              </div>
+              <div class="invalid-feedback"></div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer bg-whitesmoke br">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="btnSave" onclick="save()">SIMPAN</button>
         </form>
+      </div>
+      <div class="modal-footer bg-whitesmoke br">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btnSave" onclick="save()">SIMPAN</button>
+
       </div>
     </div>
   </div>

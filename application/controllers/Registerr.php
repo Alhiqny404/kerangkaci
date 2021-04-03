@@ -9,46 +9,50 @@ class Register extends CI_Controller {
   }
 
   public function index() {
-    $this->load->view('auth/register');
+    //$this->load->view('auth/register');
+    $this->_validation();
   }
 
-  public function validate() {
-    $this->form_validation->set_rules('nama', 'Nama', 'trim|required|min_length[2]|max_length[10]',
+
+
+  private function _validation() {
+    // SET RULES SETIAP INPUTAN
+    $this->form_validation->set_rules('nama', 'Nama', 'trim|required|min_length[2]',
       [
-        'required' => 'Nama Panggilan harus diisi',
-        'min_lenght' => 'Nama Panggilan terlalu pendek',
-        'max_length' => 'Nama Panggilan Terlalu panjang'
+        'required' => 'nama harus diisi!',
+        'min_length' => 'naman terlalu pendek!'
       ]);
     $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[user.email]',
       [
-        'required' => 'Email harus diisi',
-        'valid_email' => 'Email tidak Valid',
-        'is_unique' => 'Email sudah digunakan akun lain'
+        'required' => 'email harus diisi!',
+        'valid_email' => 'masukan email yang benar',
+        'is_unique' => 'email ini telah digunakan'
+
       ]);
-    $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[2]',
+    $this->form_validation->set_rules('password1', 'Password', 'trim|required|min_length[2]',
       [
-        'required' => 'Password harus diisi',
-        'min_length' => 'Password terlalu pendek'
+        'required' => 'password harus diisi!',
+        'min_length' => 'password terlalu pendek'
+
+
       ]);
-    $this->form_validation->set_rules('password2', 'Password2', 'trim|required|matches[password]',
+    $this->form_validation->set_rules('password2', 'Password confirmation', 'trim|required|matches[password1]',
       [
-        'required' => 'Password konfirmasi harus diisi',
-        'matches' => 'Pssword tidak sesuai dengan diatas'
+        'required' => 'konfirmasi password harus diisi!',
+        'matches' => 'password tidak sesuai'
+
       ]);
 
+    // JIKA VALIDASI BGAGAL ATAU BELUM DILAKUKAN
     if ($this->form_validation->run() == false) {
-      $err = [
-        'nama' => form_error('nama'),
-        'email' => form_error('email'),
-        'password' => form_error('password'),
-        'password2' => form_error('password2')
-      ];
-      echo json_encode(['status' => FALSE, 'err' => $err]);
-    } else {
+      $this->load->view('auth/register');
+    }
+    // JIKA LOLOS VALIDASI
+    else {
       $data = [
         'nama' => htmlspecialchars($this->input->post('nama'), true),
         'email' => htmlspecialchars($this->input->post('email'), true),
-        'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+        'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
         'avatar' => 'avatar.png',
         'limit_salah' => 0,
         'is_active' => 0,
@@ -56,18 +60,22 @@ class Register extends CI_Controller {
         'created_at' => time()
       ];
 
+      //MEMBUAT TOKEN
       $token = base64_encode(random_bytes(32));
       $user_token = [
-        'token' => $token,
         'email' => $this->input->post('email'),
+        'token' => $token,
         'created_at' => time()
+
       ];
 
       $this->db->insert('user', $data);
       $this->db->insert('user_token', $user_token);
-      $this->_sendemail($token, 'verify');
-      echo json_encode(['status' => TRUE, 'url' => 'login']);
 
+      $this->_sendemail($token, 'verify');
+
+      $this->session->set_flashdata('pesan', 'pendaftaran telah berhasil');
+      return redirect('login');
     }
 
   }

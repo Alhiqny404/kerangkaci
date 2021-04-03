@@ -23,12 +23,6 @@ class Menu_Model extends CI_Model {
   }
 
   private function _get_datatables_query() {
-    /* $query = "
-	  SELECT * FROM sub_menu
-	  INNER JOIN menu
-	  ON sub_menu.menu_id = menu.id
-	  ";
-	 $this->db->query($query);*/
     $this->db->from($this->table);
     $i = 0;
 
@@ -50,30 +44,17 @@ class Menu_Model extends CI_Model {
     }
 
     if (isset($_POST['order'])) {
-      $this
-      ->db
-      ->order_by(
-        $this
-        ->column_order[
-          $_POST
-          ['order']
-          ['0']
-          ['column']
-        ],
-        $_POST['order']['0']['dir']
-      );
+      $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
     } else if (isset($this->order)) {
       $order = $this->order;
-      $this->db->order_by(key($order),
-        $order[key($order)]);
+      $this->db->order_by(key($order), $order[key($order)]);
     }
   }
 
   function get_datatables() {
     $this->_get_datatables_query();
     if ($_POST['length'] != -1)
-      $this->db->limit($_POST['length'],
-      $_POST['start']);
+      $this->db->limit($_POST['length'], $_POST['start']);
     $query = $this->db->get();
     return $query->result();
   }

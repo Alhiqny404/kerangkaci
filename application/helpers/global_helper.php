@@ -1,5 +1,11 @@
 <?php
 
+function aplikasi() {
+  $ci = get_instance();
+  return $ci->db->get('aplikasi')->row_array();
+
+}
+
 function harus_login() {
   $ci = get_instance();
   if (!$ci->session->userdata('email')) {
@@ -17,6 +23,20 @@ function harus_login() {
       redirect('login/blokir');
     }
   }
+}
+
+
+function akses_submenu() {
+  $ci = get_instance();
+  $uri1 = $ci->uri->segment(1);
+  $uri2 = $ci->uri->segment(2);
+  $url = "{$uri1}/{$uri2}";
+  $status = $ci->db->get_where('sub_menu', ['url' => $url])->row_array()['is_active'];
+  if ($status == 0) {
+    echo 'menu ini dinonaktifkan'; die;
+  }
+
+
 }
 
 
@@ -38,7 +58,7 @@ function submenu($id) {
   $ci = get_instance();
   $menuId = $id;
   $querySM = "
-            SELECT * FROM sub_menu WHERE menu_id = $menuId
+            SELECT * FROM sub_menu WHERE menu_id = $menuId AND is_active = 1
             ";
   return $subMenu = $ci->db->query($querySM)->result_array();
 }

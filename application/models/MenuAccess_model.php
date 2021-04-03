@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Role_Model extends CI_Model {
+class MenuAccess_Model extends CI_Model {
 
-  var $table = 'role';
-  var $column_order = [null,
-    'role',
+  var $table = 'menu';
+  var $column_order = ['urutan',
+    'menu',
     null];
-  var $column_search = ['role'];
-  var $order = ['role' => 'asc'];
+  var $column_search = ['menu'];
+  var $order = ['urutan' => 'asc'];
 
   public function __construct() {
     parent::__construct();
@@ -16,8 +16,15 @@ class Role_Model extends CI_Model {
   }
 
   private function _get_datatables_query() {
+    /* $query = "
+	  SELECT * FROM sub_menu
+	  INNER JOIN menu
+	  ON sub_menu.menu_id = menu.id
+	  ";
+	 $this->db->query($query);*/
     $this->db->from($this->table);
     $i = 0;
+
     foreach ($this->column_search as $item) {
       if ($_POST['search']['value']) {
         if ($i === 0) {

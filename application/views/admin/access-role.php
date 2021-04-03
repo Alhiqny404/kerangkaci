@@ -1,56 +1,99 @@
-<?php $this->load->view('layout/_datatables.php'); ?>
+<?php $getId = $this->uri->segment(4); ?>
+<?php $this->load->view('dist/_partials/header'); ?>
 
 
-<div class="row">
-  <div class="col-md-4">
-    <!-- TABLE STRIPED -->
-    <div class="panel">
-      <div class="panel-body">
-        <div class="text-right">
+<link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/datatables/datatables.min.css">
+<link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css">
 
-          <a href="<?= site_url('sistem/role'); ?>" class="add mb-4 btn btn-primary mt-3" onclick="tambah()" style="background-color: #00aaff;padding:5px 10px">Kembali</a>
-        </div>
-        <table class="table table-striped table-hover" id="tablerole">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Role</th>
-              <th>opsi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php $i = 1; foreach ($menu as $m) : ?>
-            <tr>
-              <td><?= $i++; ?></td>
-              <td><?= $m['menu']; ?></td>
-              <td>
-                <div class="form-group">
-                  <input id="checkbox" class="form-check-input" type="checkbox" <?= access($role['id'], $m['id']); ?> data-menu="<?= $m['id']; ?>" data-role="<?= $role['id'] ?>">
-                </div>
-              </td>
-            </tr>
-            <?php endforeach; ?>
+<script src="<?= base_url('stisla/'); ?>assets/modules/datatables/datatables.min.js"></script>
+<script src="<?= base_url('stisla/'); ?>assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="<?= base_url('stisla/'); ?>assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js"></script>
 
-          </tbody>
-        </table>
-      </div>
+<!-- Main Content -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1><?=$title; ?></h1>
     </div>
-    <!-- END TABLE STRIPED -->
-  </div>
+
+    <div class="section-body">
+
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="text-right">
+                <a href="<?= site_url('sistem/role'); ?>" class="add mb-4 btn btn-primary mt-3" onclick="tambah()" style="background-color: #00aaff;padding:5px 10px">Kembali</a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm" id="table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Menu</th>
+                      <th>Akses</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 </div>
+
+
+
+<?php $this->load->view('dist/_partials/footer'); ?>
+
+
 
 
 <script>
 
   let save_method; //for save method string
   let table;
+  let getId = <?= $this->uri->segment(4); ?>;
   $(document).ready(function() {
-    $('#tablerole').DataTable();
+
+    console.log(getId);
+
+    table = $('#table').DataTable({
+
+      "processing": true, //Feature control the processing indicator.
+      "serverSide": true, //Feature control DataTables' server-side processing mode.
+
+      // Load data for the table's content from an Ajax source
+      "ajax": {
+        "url": "<?= site_url('sistem/role/ajaxAccess/') ?>"+getId,
+        "type": "POST"
+      },
+
+      //Set column definition initialisation properties.
+      "columnDefs": [{
+        "targets": [-1], //last column
+        "orderable": false, //set not orderable
+      },
+      ],
+      success: function(data) {
+        console.log(data);
+      }
+
+    });
+
   });
 
-  $('.form-check-input').on('click', function() {
-    const menuId = $(this).data('menu');
-    const roleId = $(this).data('role');
+  function changeAccess(menuId, roleId) {
+
 
     $.ajax({
       url: "<?= site_url('sistem/role/changeAccess'); ?>",
@@ -60,7 +103,11 @@
         roleId: roleId
       },
       success: function() {
-        document.location.href = "<?= base_url('sistem/role/akses/'); ?>"+roleId;
+        iziToast.success({
+          title: 'UPDATE!',
+          message: 'Akses Telah diubah',
+          position: 'topRight'
+        });
         console.log('success');
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -68,8 +115,7 @@
       }
 
     });
+  }
 
-
-  });
 
 </script>

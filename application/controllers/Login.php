@@ -9,72 +9,76 @@ class Login extends CI_Controller {
     }
     // JIKA BELUM KOGIN
     else {
-      $this->_validation();
+      $this->load->view('auth/login');
+      //$this->_validation();
     }
   }
 
 
-  private function _validation() {
+  public function validate() {
 
-    // SET RULES UNTUK FORM
     $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email', [
       'required' => 'email harus diisi',
       'valid_email' => 'email tidak valid'
     ]);
-    $this->form_validation->set_rules('password', 'Password', 'required', [
-      'required' => 'password harus diisi'
+    $this->form_validation->set_rules('password', 'Password', 'required|min_length[2]', [
+      'required' => 'password harus diisi',
+      'min_length' => 'password terlalu pendek'
     ]);
-    $email = $this->input->post('email');
-    $password = $this->input->post('password');
 
-    // JIKA VALIDASI GAGAL
-    if ($this->form_validation->run() == false) {
-      $this->load->view('auth/login');
-    }
-    // JIKA LOLOS VALIDASI
-    else
-    {
+    if ($this->form_validation->run() == FALSE) {
+      $err = [
+        'email' => form_error('email'),
+        'password' => form_error('password')
+      ];
+      echo json_encode(['status' => FALSE, 'err' => $err]);
+    } else {
+
+      $email = $this->input->post('email');
+      $password = $this->input->post('password');
       $user = $this->db->get_where('user', ['email' => $email])->row_array();
-      // JIKA EMAIL BENAR
       if ($user) {
-        // JIKA AKUN SUDAH VERIFIKASI
         if ($user['is_active'] == 1) {
           if (password_verify($password, $user['password'])) {
             $data = [
               'email' => $user['email'],
-              'role_id' => $user['role_id'],
-              'nama' => $user['nama']
+              'nama' => $user['nama'],
+              'role_id' => $user['role_id']
             ];
             $this->session->set_userdata($data);
-            // JIKA ROLE ADMIN
             if ($user['role_id'] == 1) {
-              redirect('dashboard');
+              // sebagai admin
+              echo json_encode(['status' => TRUE, 'url' => 'dashboard']);
+            } else {
+              // sebagai user
+              echo json_encode(['status' => TRUE, 'url' => 'profile']);
             }
-            // JIKA ROLE USER
-            else {
-              redirect('profile');
-            }
-
-          }
-          // JIKA PASSWORD SALAH
-          else
-          {
-            $this->session->set_flashdata('!password', '<small class="text-danger pl-3"> password salah</small>');
-            redirect('login');
+          } else {
+            // password salah
+            $err = ['email' => '',
+              'password' => 'Password salah'];
+            echo json_encode(['status' => FALSE, 'err' => $err]);
           }
         } else {
-          echo 'akun belum aktif';
+          // akun belum aktif / diblokir
+          $err = ['email' => 'Akun Tidak / Belum Aktif',
+            'password' => ''];
+          echo json_encode(['status' => FALSE, 'err' => $err]);
         }
+      } else {
+        // email tidak terdaftar
+        $err = ['email' => 'email tidak terdaftar',
+          'password' => ''];
+        echo json_encode(['status' => FALSE, 'err' => $err]);
       }
-      // JIKA EMAIL SALAH
-      else
-      {
-        $this->session->set_flashdata('!email', '<small class="text-danger pl-3"> email salah</small>');
-        redirect('login');
 
-      }
+
     }
+
+
+
   }
+
   public function logout() {
     $this->session->sess_destroy();
     redirect('login');

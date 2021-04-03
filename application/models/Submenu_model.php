@@ -9,12 +9,13 @@ class Submenu_model extends CI_Model {
     'title',
     'icon',
     'url',
-    null];
-  var $column_search = ['menu_id',
-    'title',
-    'icon',
-    'url'];
-  var $order = ['menu_id' => 'asc'];
+    'is_active',
+    null
+  ];
+  var $column_search = [
+    'title'
+  ];
+  var $order = ['title' => 'asc'];
 
   public function __construct() {
     parent::__construct();
@@ -22,12 +23,7 @@ class Submenu_model extends CI_Model {
   }
 
   private function _get_datatables_query() {
-    $query = "
-	  SELECT * FROM sub_menu
-	  INNER JOIN menu
-	  ON sub_menu.menu_id = menu.id
-	  ";
-    // $this->db->query($query)->result();
+
     $this->db->select('sub_menu.*,menu.menu');
     $this->db->from($this->table);
     $this->db->join('menu', 'sub_menu.menu_id = menu.id');
@@ -51,30 +47,17 @@ class Submenu_model extends CI_Model {
     }
 
     if (isset($_POST['order'])) {
-      $this
-      ->db
-      ->order_by(
-        $this
-        ->column_order[
-          $_POST
-          ['order']
-          ['0']
-          ['column']
-        ],
-        $_POST['order']['0']['dir']
-      );
+      $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
     } else if (isset($this->order)) {
       $order = $this->order;
-      $this->db->order_by(key($order),
-        $order[key($order)]);
+      $this->db->order_by(key($order), $order[key($order)]);
     }
   }
 
   function get_datatables() {
     $this->_get_datatables_query();
     if ($_POST['length'] != -1)
-      $this->db->limit($_POST['length'],
-      $_POST['start']);
+      $this->db->limit($_POST['length'], $_POST['start']);
     $query = $this->db->get();
     return $query->result();
   }

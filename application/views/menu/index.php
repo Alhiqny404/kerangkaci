@@ -94,6 +94,8 @@
   function add() {
     save_method = 'add';
     $('#form')[0].reset(); // reset form on modals
+    $('.form-control').removeClass('is-invalid');
+    $('.invalid-feedback').empty();
     $('#modal_form').modal('show'); // show bootstrap modal
     $('.modal-title').text('Tambahkan menu'); // Set Title to Bootstrap modal title
     console.log(save_method);
@@ -102,6 +104,8 @@
   function edit(id) {
     save_method = 'update';
     $('#form')[0].reset(); // reset form on modals
+    $('.form-control').removeClass('is-invalid');
+    $('.invalid-feedback').empty();
 
     //Ajax Load data from ajax
     $.ajax({
@@ -147,27 +151,60 @@
       dataType: "JSON",
       success: function(data) {
         //if success close modal and reload ajax table
-        $('#modal_form').modal('hide');
-        reload_table();
-        if (save_method == 'add') {
-          iziToast.success({
-            title: 'DITAMBAHKAN!',
-            message: 'menu berhaasil ditambahkan',
-            position: 'topRight'
-          });
-        } else
-        {
-          iziToast.success({
-            title: 'UPDATE!',
-            message: 'menu berhasil diupdate',
-            position: 'topRight'
-          });
+
+        if (data.status == false) {
+          if (!data.err.menu == "") {
+            $('[name="menu"]').addClass('is-invalid');
+            $('[in="menu"]').html(data.err.menu);
+          } else {
+            $('[name="menu"]').removeClass('is-invalid');
+            $('[in="menu"]').html();
+          }
+          if (!data.err.title == "") {
+            $('[name="title"]').addClass('is-invalid');
+            $('[in="title"]').html(data.err.title);
+          } else {
+            $('[name="title"]').removeClass('is-invalid');
+            $('[in="title"]').html();
+          }
+          if (!data.err.icon == "") {
+            $('[name="icon"]').addClass('is-invalid');
+            $('[in="icon"]').html(data.err.icon);
+          } else {
+            $('[name="icon"]').removeClass('is-invalid');
+            $('[in="icon"]').html();
+          }
+          if (!data.err.tipe == "") {
+            $('[name="tipe"]').addClass('is-invalid');
+            $('[in="tipe"]').html(data.err.tipe);
+          } else {
+            $('[name="tipe"]').removeClass('is-invalid');
+            $('[in="tipe"]').html();
+          }
+
+        } else {
+          $('#modal_form').modal('hide');
+          reload_table();
+          if (save_method == 'add') {
+            iziToast.success({
+              title: 'DITAMBAHKAN!',
+              message: 'role telah ditambahkan',
+              position: 'topRight'
+            });
+          } else
+          {
+            iziToast.success({
+              title: 'UPDATE!',
+              message: 'role telah diupdate',
+              position: 'topRight'
+            });
+          }
+
         }
 
       },
       error: function (jqXHR, textStatus, errorThrown) {
         alert('Error adding / update data');
-
       }
     });
   }
@@ -242,23 +279,27 @@
           <div class="form-body">
             <div class="form-group">
               <label class="control-label">menu</label>
-              <input name="menu" placeholder="menu" class="form-control" type="text">
+              <input name="menu" placeholder="menu" class="form-control inputan" type="text">
+              <div class="invalid-feedback" in="menu"></div>
             </div>
             <div class="form-group none">
               <label class="control-label">title</label>
-              <input name="title" placeholder="title" class="form-control" type="text">
+              <input name="title" placeholder="title" class="form-control inputan" type="text">
+              <div class="invalid-feedback" in="title"></div>
             </div>
             <div class="form-group none">
               <label class="control-label col-md-2">icon</label>
-              <input name="icon" placeholder="icon" class="form-control" type="text">
+              <input name="icon" placeholder="icon" class="form-control inputan" type="text">
+              <div class="invalid-feedback" in="icon"></div>
             </div>
             <div class="form-group">
               <label for="tipemenu" class="control-label col-md-2">Tipe</label>
               <select name="tipe" class="form-control tipemenu" id="tipemenu">
-                <option value="0">--- PILIH TIPE ---</option>
+                <option value="">--- PILIH TIPE ---</option>
                 <option value="1">Biasa</option>
                 <option value="2">Dropdown</option>
               </select>
+              <div class="invalid-feedback" in="tipe"></div>
             </div>
           </div>
         </form>

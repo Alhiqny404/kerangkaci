@@ -1,56 +1,94 @@
-<?php $this->load->view('layout/_datatables.php'); ?>
+<?php $this->load->view('dist/_partials/header'); ?>
 
 
-<div class="row">
-  <div class="col-md-12">
-    <!-- TABLE STRIPED -->
-    <div class="panel">
-      <div class="panel-body">
-        <button type="button" class="add btn btn-primary btn-sm" onclick="add()">Tambah User</button>
-        <br><br>
-        <table class="table table-striped table-hover table-sm" id="table">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama</th>
-              <th>Email</th>
-              <th>Foto Profile</th>
-              <th>Role</th>
-              <th>Akun Dibuat</th>
-              <th>Status Aktif</th>
-              <th>Opsi</th>
-            </tr>
-          </thead>
-          <tbody>
+<link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/datatables/datatables.min.css">
+<link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css">
 
-          </tbody>
-        </table>
-      </div>
+<script src="<?= base_url('stisla/'); ?>assets/modules/datatables/datatables.min.js"></script>
+<script src="<?= base_url('stisla/'); ?>assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="<?= base_url('stisla/'); ?>assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js"></script>
+
+<!-- Main Content -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1><?=$title; ?></h1>
     </div>
-    <!-- END TABLE STRIPED -->
-  </div>
+
+    <div class="section-body">
+
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <button type="button" class="add btn btn-primary btn-sm" onclick="add()"><i class="fa fa-plus"></i></button>
+            </div>
+            <div class="card-body">
+              <d9v class="table-responsive">
+
+                <table class="table table-striped table-hover table-sm" id="table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama</th>
+                      <th>Email</th>
+                      <th>Foto Profile</th>
+                      <th>Role</th>
+                      <th>Akun Dibuat</th>
+                      <th>Status Aktif</th>
+                      <th>Opsi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+              </d9v>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 </div>
+
+
+
+<?php $this->load->view('dist/_partials/footer'); ?>
+
+
 
 
 <script>
   var save_method; //for save method string
   var table;
 
-  function coba(id,status)
-  {
+  function coba(id, status) {
 
     $.ajax({
-      url: "<?= site_url('master/user/status/');?>"+id,
-      type:"post",
-      data: {id : id,status:status},
-      success: function()
-      {
+      url: "<?= site_url('master/user/status/'); ?>"+id,
+      type: "post",
+      data: {
+        id: id, status: status
+      },
+      success: function() {
         reload_table();
         if (status == 0) {
-          toastr.success('User Telah diAktifkan');
+          iziToast.success({
+            title: 'DIAKTIFKAN!',
+            message: 'user telah diaktifkan',
+            position: 'topRight'
+          });
         } else
         {
-          toastr.success('User Telah Diblokir');
+          iziToast.success({
+            title: 'DIBLOKIR!',
+            message: 'User telah diblokir',
+            position: 'topRight'
+          });
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -92,6 +130,8 @@
   function add() {
     save_method = 'add';
     $('#form')[0].reset(); // reset form on modals
+    $('.form-control').removeClass('is-invalid');
+    $('.invalid-feedback').empty();
     $('#modal_form').modal('show'); // show bootstrap modal
     $('.modal-title').text('Tambahkan User'); // Set Title to Bootstrap modal title
     console.log(save_method);
@@ -100,6 +140,8 @@
   function edit(id) {
     save_method = 'update';
     $('#form')[0].reset(); // reset form on modals
+    $('.form-control').removeClass('is-invalid');
+    $('.invalid-feedback').empty();
     $('.password').html('<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="">Ganti Passoword</a>');
 
     //Ajax Load data from ajax
@@ -126,10 +168,12 @@
   }
 
   function reload_table() {
-    table.ajax.reload(null, false); //reload datatable ajax
+    table.ajax.reload(null,
+      false); //reload datatable ajax
   }
 
   function save() {
+    console.log(save_method);
     var url;
     if (save_method == 'add') {
       url = "<?= site_url('master/user/ajax_add') ?>";
@@ -146,14 +190,59 @@
       dataType: "JSON",
       success: function(data) {
         //if success close modal and reload ajax table
-        $('#modal_form').modal('hide');
-        reload_table();
-        if (save_method == 'add') {
-          toastr.success('User Baru Berhasil Ditambahkan!');
-        } else
-        {
-          toastr.success('User Baru saja diedit');
+
+        if (data.status == false) {
+          if (!data.err.nama == "") {
+            $('[name="nama"]').addClass('is-invalid');
+            $('[in="nama"]').html(data.err.nama);
+          } else {
+            $('[name="nama"]').removeClass('is-invalid');
+            $('[in="nama"]').html();
+          }
+          if (!data.err.email == "") {
+            $('[name="email"]').addClass('is-invalid');
+            $('[in="email"]').html(data.err.email);
+          } else {
+            $('[name="email"]').removeClass('is-invalid');
+            $('[in="email"]').html();
+          }
+          if (!data.err.password == "") {
+            $('[name="password"]').addClass('is-invalid');
+            $('[in="password"]').html(data.err.password);
+          } else {
+            $('[name="password"]').removeClass('is-invalid');
+            $('[in="password"]').html();
+          }
+          if (!data.err.role_id == "") {
+            $('[name="role_id"]').addClass('is-invalid');
+            $('[in="role_id"]').html(data.err.role_id);
+          } else {
+            $('[name="role_id"]').removeClass('is-invalid');
+            $('[in="role_id"]').html();
+          }
+
+        } else {
+          $('#modal_form').modal('hide');
+          reload_table();
+          if (save_method == 'add') {
+            iziToast.success({
+              title: 'DITAMBAHKAN!',
+              message: 'data telah ditambahkan',
+              position: 'topRight'
+            });
+          } else
+          {
+            iziToast.success({
+              title: 'UPDATE!',
+              message: 'data telah diupdate',
+              position: 'topRight'
+            });
+          }
+
         }
+
+
+
 
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -165,17 +254,16 @@
 
   function delete_user(id) {
 
+
     swal({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      closeOnConfirm: false
-    }).then(function(isConfirm) {
-      if (isConfirm) {
+      title: 'Kamu Yakin?',
+      text: 'Menu Akan Dihapus',
+      icon: 'warning',
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
 
         // ajax delete data to database
         $.ajax({
@@ -187,16 +275,26 @@
             $('#modal_form').modal('hide');
             reload_table();
             swal.close();
-            toastr.success('User Baru saja dihapus');
+            iziToast.success({
+              title: 'TERHAPUS!',
+              message: 'Data telah terhapus',
+              position: 'topRight'
+            });
           },
           error: function (jqXHR, textStatus, errorThrown) {
             alert('Error adding / update data');
           }
         });
 
-
+      } else {
+        iziToast.error({
+          title: 'GAGAL!!',
+          message: 'Data batal dihapus',
+          position: 'topRight'
+        });
       }
-    })
+    });
+
 
   }
 
@@ -204,59 +302,54 @@
 </script>
 
 
-<!-- Bootstrap modal -->
-<div class="modal fade" id="modal_form" menu="dialog">
-  <div class="modal-dialog">
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_form">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title">User Form</h3>
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div class="modal-body form">
+      <div class="modal-body">
         <form action="#" id="form" class="form-horizontal">
           <input type="hidden" value="" name="id" />
           <div class="form-body">
             <div class="form-group">
               <label class="control-label col-md-2">Nama</label>
-              <div class="col-md-9">
-                <input name="nama" placeholder="Nama Lengkap" class="form-control" type="text">
-              </div>
+              <input name="nama" placeholder="nama" class="form-control" type="text">
+              <div class="invalid-feedback" in="nama"></div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-2">Email</label>
-              <div class="col-md-9">
-                <input name="email" placeholder="Alamat Email" class="form-control" type="email">
-              </div>
+              <label class="control-label col-md-2">email</label>
+              <input name="email" placeholder="email" class="form-control" type="text">
+              <div class="invalid-feedback" in="email"></div>
             </div>
-            <div class="form-group">
-              <label class="control-label col-md-2">Passoword</label>
-              <div class="col-md-9 password">
-                <input name="password" placeholder="Alamat Email" class="form-control" type="text" value="123">
-              </div>
+            <div class="form-group password">
+              <label class="control-label col-md-2">password</label>
+              <input name="password" placeholder="password" class="form-control" type="text" value="123">
+              <div class="invalid-feedback" in="password"></div>
             </div>
             <div class="form-group">
               <label class="control-label col-md-2">Role</label>
-              <div class="col-md-9">
-                <select class="form-control" name="role_id" id="datarole">
-                  <option>--- Role ---</option>
-                  <?php foreach ($role as $r) : ?>
-                  <option value="<?= $r['id']; ?>" datarole="<?= $r['role']; ?>" id="role"><?= $r['role']; ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              
+              <select class="form-control" name="role_id" id="datarole">
+                <option value="">--- Role ---</option>
+                <?php foreach ($role as $r) : ?>
+                <option value="<?= $r['id']; ?>" datarole="<?= $r['role']; ?>" id="role"><?= $r['role']; ?></option>
+                <?php endforeach; ?>
+              </select>
+              <div class="invalid-feedback" in="role_id"></div>
             </div>
           </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+      <div class="modal-footer bg-whitesmoke br">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btnSave" onclick="save()">SIMPAN</button>
       </div>
     </div>
-    <!-- /.modal-content -->
   </div>
-  <!-- /.modal-dialog -->
 </div>
-<!-- /.modal -->
-<!-- End Bootstrap modal -->
