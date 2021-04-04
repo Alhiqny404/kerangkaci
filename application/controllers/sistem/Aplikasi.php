@@ -13,10 +13,9 @@ class Aplikasi extends CI_Controller {
 
   // halaman utama
   public function index() {
-    $page = 'admin/apps';
+    $page = 'sistem/apps';
     $data['title'] = 'Aplikasi';
-    //pages($page, $data);
-    $this->load->view('sistem/apps', $data);
+    pages($page, $data);
   }
 
   public function update() {

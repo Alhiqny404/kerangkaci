@@ -13,7 +13,7 @@ class User extends CI_Controller {
     $page = 'master/user';
     $data['role'] = $this->db->get('role')->result_array();
     $data['title'] = 'Data User';
-    $this->load->view('master/user', $data);
+    pages($page, $data);
   }
 
 

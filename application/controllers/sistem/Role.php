@@ -18,10 +18,9 @@ class Role extends CI_Controller {
   // halaman utama
   public function index() {
     $data['role'] = $this->db->get('role')->result_array();
-    $page = 'admin/role';
+    $page = 'sistem/role';
     $data['title'] = 'Role';
-    //pages($page, $data);
-    $this->load->view('admin/role', $data);
+    pages($page, $data);
   }
 
 
@@ -29,9 +28,9 @@ class Role extends CI_Controller {
   public function akses($id) {
     $data['role'] = $this->db->get_where('role', ['id' => $id])->row_array();
     $data['menu'] = $this->db->get('menu')->result_array();
-    $page = 'admin/access-role';
     $data['title'] = 'Role';
-    $this->load->view('admin/access-role', $data);
+    $page = 'sistem/access_role';
+    pages($page, $data);
   }
 
 

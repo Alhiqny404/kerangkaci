@@ -13,13 +13,12 @@ class Submenu extends CI_Controller {
 
   public function index() {
     $data['menu'] = $this->db->get_where('menu', ['tipe' => 2])->result_array();
-    $page = 'menu/submenu';
+    $page = 'sistem/sub_menu';
     $data['title'] = 'Sub Menu';
-    $this->load->view('menu/submenu', $data);
+    pages($page, $data);
   }
 
   public function status() {
-
     $id = $this->input->post('id');
     $status = $this->db->get_where('sub_menu', ['id' => $id])->row_array()['is_active'];
     if ($status == 1) {

@@ -12,9 +12,7 @@ class Submenu_model extends CI_Model {
     'is_active',
     null
   ];
-  var $column_search = [
-    'title'
-  ];
+  var $column_search = ['title'];
   var $order = ['title' => 'asc'];
 
   public function __construct() {

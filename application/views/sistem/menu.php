@@ -11,6 +11,22 @@
   <section class="section">
     <div class="section-header">
       <h1><?=$title; ?></h1>
+      <?php
+      $uri = explode('/', $this->uri->uri_string);
+
+
+
+      ?>
+      <div class="section-header-breadcrumb">
+        <div class="breadcrumb-item active">
+          <a href="#">Dashboard</a>
+        </div>
+        <?php foreach ($uri as $uri): ?>
+        <div class="breadcrumb-item">
+          <a href="#"><?=$uri; ?></a>
+        </div>
+        <?php endforeach; ?>
+      </div>
     </div>
 
     <div class="section-body">
@@ -21,28 +37,27 @@
           <div class="card">
             <div class="card-header">
               <button type="button" class="add btn btn-primary btn-sm" onclick="add()"><i class="fa fa-plus"></i></button>
+
+              <a href="<?=site_url('sistem/menu/urutan'); ?>" class="add btn btn-warning btn-sm">Urutkan Menu</a>
             </div>
             <div class="card-body">
-              <d9v class="table-responsive">
-
+              <div class="table-responsive">
                 <table class="table table-striped table-hover table-sm" id="table">
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Nama</th>
-                      <th>Email</th>
-                      <th>Foto Profile</th>
-                      <th>Role</th>
-                      <th>Akun Dibuat</th>
-                      <th>Status Aktif</th>
-                      <th>Opsi</th>
+                      <th>menu</th>
+                      <th>title</th>
+                      <th>icon</th>
+                      <th>tipe</th>
+                      <th>opsi</th>
                     </tr>
                   </thead>
                   <tbody>
 
                   </tbody>
                 </table>
-              </d9v>
+              </div>
             </div>
           </div>
         </div>
@@ -54,49 +69,13 @@
 
 
 
-<?php $this->load->view('_layouts/js'); ?>
-
-
+<?php $this->load->view('_layouts/js.php'); ?>
 
 
 <script>
   var save_method; //for save method string
   var table;
-
-  function coba(id, status) {
-
-    $.ajax({
-      url: "<?= site_url('master/user/status/'); ?>"+id,
-      type: "post",
-      data: {
-        id: id, status: status
-      },
-      success: function() {
-        reload_table();
-        if (status == 0) {
-          iziToast.success({
-            title: 'DIAKTIFKAN!',
-            message: 'user telah diaktifkan',
-            position: 'topRight'
-          });
-        } else
-        {
-          iziToast.success({
-            title: 'DIBLOKIR!',
-            message: 'User telah diblokir',
-            position: 'topRight'
-          });
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        alert('Error get data from ajax');
-      }
-    });
-
-  }
-
   $(document).ready(function() {
-
 
     table = $('#table').DataTable({
 
@@ -107,7 +86,7 @@
 
       // Load data for the table's content from an Ajax source
       "ajax": {
-        "url": "<?= site_url('master/user/ajaxList') ?>",
+        "url": "<?= site_url('sistem/menu/ajaxList') ?>",
         "type": "POST"
       },
 
@@ -130,7 +109,7 @@
     $('.form-control').removeClass('is-invalid');
     $('.invalid-feedback').empty();
     $('#modal_form').modal('show'); // show bootstrap modal
-    $('.modal-title').text('Tambahkan User'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Tambahkan menu'); // Set Title to Bootstrap modal title
     console.log(save_method);
   }
 
@@ -139,23 +118,22 @@
     $('#form')[0].reset(); // reset form on modals
     $('.form-control').removeClass('is-invalid');
     $('.invalid-feedback').empty();
-    $('.password').html('<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="">Ganti Passoword</a>');
 
     //Ajax Load data from ajax
     $.ajax({
-      url: "<?= site_url('master/user/ajax_edit/') ?>" + id,
+      url: "<?= site_url('sistem/menu/ajax_edit/') ?>" + id,
       type: "GET",
       dataType: "JSON",
       success: function(data) {
 
         $('[name="id"]').val(data.id);
-        $('[name="nama"]').val(data.nama);
-        $('[name="email"]').val(data.email);
-        $('[name="avatar"]').val(data.avatar);
-        $('[name="role_id"]').val(data.role_id);
+        $('[name="menu"]').val(data.menu);
+        $('[name="title"]').val(data.title);
+        $('[name="icon"]').val(data.icon);
+        $('[name="tipe"]').val(data.tipe);
 
         $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-        $('.modal-title').text('Edit User'); // Set title to Bootstrap modal title
+        $('.modal-title').text('Edit menu'); // Set title to Bootstrap modal title
 
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -165,18 +143,16 @@
   }
 
   function reload_table() {
-    table.ajax.reload(null,
-      false); //reload datatable ajax
+    table.ajax.reload(null, false); //reload datatable ajax
   }
 
   function save() {
-    console.log(save_method);
     var url;
     if (save_method == 'add') {
-      url = "<?= site_url('master/user/ajax_add') ?>";
+      url = "<?= site_url('sistem/menu/ajax_add') ?>";
     } else
     {
-      url = "<?= site_url('master/user/ajax_update') ?>";
+      url = "<?= site_url('sistem/menu/ajax_update') ?>";
     }
 
     // ajax adding data to database
@@ -189,33 +165,33 @@
         //if success close modal and reload ajax table
 
         if (data.status == false) {
-          if (!data.err.nama == "") {
-            $('[name="nama"]').addClass('is-invalid');
-            $('[in="nama"]').html(data.err.nama);
+          if (!data.err.menu == "") {
+            $('[name="menu"]').addClass('is-invalid');
+            $('[in="menu"]').html(data.err.menu);
           } else {
-            $('[name="nama"]').removeClass('is-invalid');
-            $('[in="nama"]').html();
+            $('[name="menu"]').removeClass('is-invalid');
+            $('[in="menu"]').html();
           }
-          if (!data.err.email == "") {
-            $('[name="email"]').addClass('is-invalid');
-            $('[in="email"]').html(data.err.email);
+          if (!data.err.title == "") {
+            $('[name="title"]').addClass('is-invalid');
+            $('[in="title"]').html(data.err.title);
           } else {
-            $('[name="email"]').removeClass('is-invalid');
-            $('[in="email"]').html();
+            $('[name="title"]').removeClass('is-invalid');
+            $('[in="title"]').html();
           }
-          if (!data.err.password == "") {
-            $('[name="password"]').addClass('is-invalid');
-            $('[in="password"]').html(data.err.password);
+          if (!data.err.icon == "") {
+            $('[name="icon"]').addClass('is-invalid');
+            $('[in="icon"]').html(data.err.icon);
           } else {
-            $('[name="password"]').removeClass('is-invalid');
-            $('[in="password"]').html();
+            $('[name="icon"]').removeClass('is-invalid');
+            $('[in="icon"]').html();
           }
-          if (!data.err.role_id == "") {
-            $('[name="role_id"]').addClass('is-invalid');
-            $('[in="role_id"]').html(data.err.role_id);
+          if (!data.err.tipe == "") {
+            $('[name="tipe"]').addClass('is-invalid');
+            $('[in="tipe"]').html(data.err.tipe);
           } else {
-            $('[name="role_id"]').removeClass('is-invalid');
-            $('[in="role_id"]').html();
+            $('[name="tipe"]').removeClass('is-invalid');
+            $('[in="tipe"]').html();
           }
 
         } else {
@@ -224,33 +200,28 @@
           if (save_method == 'add') {
             iziToast.success({
               title: 'DITAMBAHKAN!',
-              message: 'data telah ditambahkan',
+              message: 'role telah ditambahkan',
               position: 'topRight'
             });
           } else
           {
             iziToast.success({
               title: 'UPDATE!',
-              message: 'data telah diupdate',
+              message: 'role telah diupdate',
               position: 'topRight'
             });
           }
 
         }
 
-
-
-
       },
       error: function (jqXHR, textStatus, errorThrown) {
         alert('Error adding / update data');
-
       }
     });
   }
 
-  function delete_user(id) {
-
+  function delete_menu(id) {
 
     swal({
       title: 'Kamu Yakin?',
@@ -264,7 +235,7 @@
 
         // ajax delete data to database
         $.ajax({
-          url: "<?php echo site_url('master/user/ajax_delete/') ?>"+id,
+          url: "<?php echo site_url('sistem/menu/ajax_delete/') ?>"+id,
           type: "POST",
           dataType: "JSON",
           success: function(data) {
@@ -274,7 +245,7 @@
             swal.close();
             iziToast.success({
               title: 'TERHAPUS!',
-              message: 'Data telah terhapus',
+              message: 'Menu telah terhapus',
               position: 'topRight'
             });
           },
@@ -286,21 +257,18 @@
       } else {
         iziToast.error({
           title: 'GAGAL!!',
-          message: 'Data batal dihapus',
+          message: 'Menu batal dihapus',
           position: 'topRight'
         });
       }
     });
 
 
+
   }
 
 
 </script>
-
-
-
-
 
 <div class="modal fade" tabindex="-1" role="dialog" id="modal_form">
   <div class="modal-dialog" role="document">
@@ -312,33 +280,33 @@
         </button>
       </div>
       <div class="modal-body">
+
         <form action="#" id="form" class="form-horizontal">
           <input type="hidden" value="" name="id" />
           <div class="form-body">
             <div class="form-group">
-              <label class="control-label col-md-2">Nama</label>
-              <input name="nama" placeholder="nama" class="form-control" type="text">
-              <div class="invalid-feedback" in="nama"></div>
+              <label class="control-label">menu</label>
+              <input name="menu" placeholder="menu" class="form-control inputan" type="text">
+              <div class="invalid-feedback" in="menu"></div>
+            </div>
+            <div class="form-group none">
+              <label class="control-label">title</label>
+              <input name="title" placeholder="title" class="form-control inputan" type="text">
+              <div class="invalid-feedback" in="title"></div>
+            </div>
+            <div class="form-group none">
+              <label class="control-label col-md-2">icon</label>
+              <input name="icon" placeholder="icon" class="form-control inputan" type="text">
+              <div class="invalid-feedback" in="icon"></div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-2">email</label>
-              <input name="email" placeholder="email" class="form-control" type="text">
-              <div class="invalid-feedback" in="email"></div>
-            </div>
-            <div class="form-group password">
-              <label class="control-label col-md-2">password</label>
-              <input name="password" placeholder="password" class="form-control" type="text" value="123">
-              <div class="invalid-feedback" in="password"></div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-md-2">Role</label>
-              <select class="form-control" name="role_id" id="datarole">
-                <option value="">--- Role ---</option>
-                <?php foreach ($role as $r) : ?>
-                <option value="<?= $r['id']; ?>" datarole="<?= $r['role']; ?>" id="role"><?= $r['role']; ?></option>
-                <?php endforeach; ?>
+              <label for="tipemenu" class="control-label col-md-2">Tipe</label>
+              <select name="tipe" class="form-control tipemenu" id="tipemenu">
+                <option value="">--- PILIH TIPE ---</option>
+                <option value="1">Biasa</option>
+                <option value="2">Dropdown</option>
               </select>
-              <div class="invalid-feedback" in="role_id"></div>
+              <div class="invalid-feedback" in="tipe"></div>
             </div>
           </div>
         </form>

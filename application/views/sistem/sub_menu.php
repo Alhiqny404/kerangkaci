@@ -23,26 +23,23 @@
               <button type="button" class="add btn btn-primary btn-sm" onclick="add()"><i class="fa fa-plus"></i></button>
             </div>
             <div class="card-body">
-              <d9v class="table-responsive">
-
+              <div class="table-responsive">
                 <table class="table table-striped table-hover table-sm" id="table">
                   <thead>
                     <tr>
-                      <th>No</th>
-                      <th>Nama</th>
-                      <th>Email</th>
-                      <th>Foto Profile</th>
-                      <th>Role</th>
-                      <th>Akun Dibuat</th>
-                      <th>Status Aktif</th>
-                      <th>Opsi</th>
+                      <th scope="col">No</th>
+                      <th scope="col">menu Group</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Icon</th>
+                      <th scope="col">Url</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Opsi</th>
                     </tr>
                   </thead>
                   <tbody>
-
                   </tbody>
                 </table>
-              </d9v>
+              </div>
             </div>
           </div>
         </div>
@@ -58,45 +55,29 @@
 
 
 
-
 <script>
+
+
   var save_method; //for save method string
   var table;
-
-  function coba(id, status) {
-
-    $.ajax({
-      url: "<?= site_url('master/user/status/'); ?>"+id,
-      type: "post",
-      data: {
-        id: id, status: status
-      },
-      success: function() {
-        reload_table();
-        if (status == 0) {
-          iziToast.success({
-            title: 'DIAKTIFKAN!',
-            message: 'user telah diaktifkan',
-            position: 'topRight'
-          });
-        } else
-        {
-          iziToast.success({
-            title: 'DIBLOKIR!',
-            message: 'User telah diblokir',
-            position: 'topRight'
-          });
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        alert('Error get data from ajax');
-      }
-    });
-
-  }
-
   $(document).ready(function() {
 
+
+    $('#datamenu').on('change', function() {
+      var menu = $("#datamenu option:selected").attr('datamenu').toLowerCase();
+      var urlval = $('[name="url"]').val();
+      if (save_method == 'add') {
+        $('[name="url"]').val(menu+'/');
+      } else {
+        var url = urlval.split('/');
+
+        console.log(url[0]);
+        url[0] = menu;
+        console.log(url.join('/'));
+        $('[name="url"]').val(url.join('/'));
+
+      }
+    });
 
     table = $('#table').DataTable({
 
@@ -107,7 +88,7 @@
 
       // Load data for the table's content from an Ajax source
       "ajax": {
-        "url": "<?= site_url('master/user/ajaxList') ?>",
+        "url": "<?php echo site_url('sistem/submenu/ajaxList') ?>",
         "type": "POST"
       },
 
@@ -124,13 +105,38 @@
   });
 
 
+  function status(id) {
+
+
+    $.ajax({
+      url: "<?= site_url('sistem/submenu/status'); ?>",
+      type: "post",
+      data: {
+        id: id
+      },
+      success: function() {
+        iziToast.success({
+          title: 'UPDATE!',
+          message: 'Status Telah diubah',
+          position: 'topRight'
+        });
+        console.log('success');
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert('Error get data from ajax');
+      }
+
+    });
+  }
+
+
   function add() {
     save_method = 'add';
     $('#form')[0].reset(); // reset form on modals
     $('.form-control').removeClass('is-invalid');
     $('.invalid-feedback').empty();
     $('#modal_form').modal('show'); // show bootstrap modal
-    $('.modal-title').text('Tambahkan User'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Tambahkan submenu'); // Set Title to Bootstrap modal title
     console.log(save_method);
   }
 
@@ -139,23 +145,22 @@
     $('#form')[0].reset(); // reset form on modals
     $('.form-control').removeClass('is-invalid');
     $('.invalid-feedback').empty();
-    $('.password').html('<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="">Ganti Passoword</a>');
-
+    console.log(id);
     //Ajax Load data from ajax
     $.ajax({
-      url: "<?= site_url('master/user/ajax_edit/') ?>" + id,
+      url: "<?= site_url('sistem/submenu/ajax_edit/') ?>" + id,
       type: "GET",
       dataType: "JSON",
       success: function(data) {
 
         $('[name="id"]').val(data.id);
-        $('[name="nama"]').val(data.nama);
-        $('[name="email"]').val(data.email);
-        $('[name="avatar"]').val(data.avatar);
-        $('[name="role_id"]').val(data.role_id);
+        $('[name="menu_id"]').val(data.menu_id);
+        $('[name="title"]').val(data.title);
+        $('[name="icon"]').val(data.icon);
+        $('[name="url"]').val(data.url);
 
         $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-        $('.modal-title').text('Edit User'); // Set title to Bootstrap modal title
+        $('.modal-title').text('Edit submenu'); // Set title to Bootstrap modal title
 
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -165,18 +170,16 @@
   }
 
   function reload_table() {
-    table.ajax.reload(null,
-      false); //reload datatable ajax
+    table.ajax.reload(null, false); //reload datatable ajax
   }
 
   function save() {
-    console.log(save_method);
     var url;
     if (save_method == 'add') {
-      url = "<?= site_url('master/user/ajax_add') ?>";
+      url = "<?= site_url('sistem/submenu/ajax_add') ?>";
     } else
     {
-      url = "<?= site_url('master/user/ajax_update') ?>";
+      url = "<?= site_url('sistem/submenu/ajax_update') ?>";
     }
 
     // ajax adding data to database
@@ -188,34 +191,35 @@
       success: function(data) {
         //if success close modal and reload ajax table
 
+
         if (data.status == false) {
-          if (!data.err.nama == "") {
-            $('[name="nama"]').addClass('is-invalid');
-            $('[in="nama"]').html(data.err.nama);
+          if (!data.err.menu_id == "") {
+            $('[name="menu_id"]').addClass('is-invalid');
+            $('[in="menu_id"]').html(data.err.menu_id);
           } else {
-            $('[name="nama"]').removeClass('is-invalid');
-            $('[in="nama"]').html();
+            $('[name="menu_id"]').removeClass('is-invalid');
+            $('[in="menu_id"]').html();
           }
-          if (!data.err.email == "") {
-            $('[name="email"]').addClass('is-invalid');
-            $('[in="email"]').html(data.err.email);
+          if (!data.err.title == "") {
+            $('[name="title"]').addClass('is-invalid');
+            $('[in="title"]').html(data.err.title);
           } else {
-            $('[name="email"]').removeClass('is-invalid');
-            $('[in="email"]').html();
+            $('[name="title"]').removeClass('is-invalid');
+            $('[in="title"]').html();
           }
-          if (!data.err.password == "") {
-            $('[name="password"]').addClass('is-invalid');
-            $('[in="password"]').html(data.err.password);
+          if (!data.err.icon == "") {
+            $('[name="icon"]').addClass('is-invalid');
+            $('[in="icon"]').html(data.err.icon);
           } else {
-            $('[name="password"]').removeClass('is-invalid');
-            $('[in="password"]').html();
+            $('[name="icon"]').removeClass('is-invalid');
+            $('[in="icon"]').html();
           }
-          if (!data.err.role_id == "") {
-            $('[name="role_id"]').addClass('is-invalid');
-            $('[in="role_id"]').html(data.err.role_id);
+          if (!data.err.url == "") {
+            $('[name="url"]').addClass('is-invalid');
+            $('[in="url"]').html(data.err.url);
           } else {
-            $('[name="role_id"]').removeClass('is-invalid');
-            $('[in="role_id"]').html();
+            $('[name="url"]').removeClass('is-invalid');
+            $('[in="url"]').html();
           }
 
         } else {
@@ -238,9 +242,6 @@
 
         }
 
-
-
-
       },
       error: function (jqXHR, textStatus, errorThrown) {
         alert('Error adding / update data');
@@ -249,7 +250,7 @@
     });
   }
 
-  function delete_user(id) {
+  function delete_submenu(id) {
 
 
     swal({
@@ -264,7 +265,7 @@
 
         // ajax delete data to database
         $.ajax({
-          url: "<?php echo site_url('master/user/ajax_delete/') ?>"+id,
+          url: "<?php echo site_url('sistem/submenu/ajax_delete/') ?>"+id,
           type: "POST",
           dataType: "JSON",
           success: function(data) {
@@ -274,7 +275,7 @@
             swal.close();
             iziToast.success({
               title: 'TERHAPUS!',
-              message: 'Data telah terhapus',
+              message: 'Menu telah terhapus',
               position: 'topRight'
             });
           },
@@ -286,7 +287,7 @@
       } else {
         iziToast.error({
           title: 'GAGAL!!',
-          message: 'Data batal dihapus',
+          message: 'Menu batal dihapus',
           position: 'topRight'
         });
       }
@@ -296,9 +297,8 @@
   }
 
 
+
 </script>
-
-
 
 
 
@@ -316,29 +316,34 @@
           <input type="hidden" value="" name="id" />
           <div class="form-body">
             <div class="form-group">
-              <label class="control-label col-md-2">Nama</label>
-              <input name="nama" placeholder="nama" class="form-control" type="text">
-              <div class="invalid-feedback" in="nama"></div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-md-2">email</label>
-              <input name="email" placeholder="email" class="form-control" type="text">
-              <div class="invalid-feedback" in="email"></div>
-            </div>
-            <div class="form-group password">
-              <label class="control-label col-md-2">password</label>
-              <input name="password" placeholder="password" class="form-control" type="text" value="123">
-              <div class="invalid-feedback" in="password"></div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-md-2">Role</label>
-              <select class="form-control" name="role_id" id="datarole">
-                <option value="">--- Role ---</option>
-                <?php foreach ($role as $r) : ?>
-                <option value="<?= $r['id']; ?>" datarole="<?= $r['role']; ?>" id="role"><?= $r['role']; ?></option>
+              <label class="control-label col-md-2">menu</label>
+              <select class="form-control" name="menu_id" id="datamenu">
+                <option value="">--- menu ---</option>
+                <?php foreach ($menu as $m) : ?>
+                <option value="<?= $m['id']; ?>" datamenu="<?= $m['menu']; ?>" id="menu"><?= $m['menu']; ?></option>
                 <?php endforeach; ?>
               </select>
-              <div class="invalid-feedback" in="role_id"></div>
+              <div class="invalid-feedback" in="menu_id"></div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-2">title</label>
+              <input name="title" placeholder="title" class="form-control" type="text">
+              <div class="invalid-feedback" in="title"></div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-2">icon</label>
+              <input name="icon" placeholder="icon" class="form-control" type="text">
+              <div class="invalid-feedback" in="icon"></div>
+            </div>
+            <div class="form-group">
+              <label for="basic-url" class="control-label col-md-2">Url</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3"><?= site_url(); ?></span>
+                </div>
+                <input type="text" name="url" placeholder="url" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                <div class="invalid-feedback" in="url"></div>
+              </div>
             </div>
           </div>
         </form>

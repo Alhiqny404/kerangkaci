@@ -10,20 +10,25 @@ class Menu extends CI_Controller {
     akses_submenu();
   }
 
+  // HALAMAN UTAMA MENU MANAGEMENT
   public function index() {
     $page = 'menu/index';
     $data['title'] = 'Menu Group';
-    $this->load->view('menu/index', $data);
+    $page = 'sistem/menu';
+    pages($page, $data);
   }
 
 
+  // HALAMAN PENGORDERAN MENU
   public function urutan() {
     $page = 'menu/urutan_menu';
     $data['menu'] = $this->db->get('menu')->result_array();
     $data['title'] = 'Urutan Menu';
-    $this->load->view('menu/urutan_menu', $data);
+    $page = 'sistem/order_menu';
+    pages($page, $data);
   }
 
+  // FUNGSI MENAIKAN URUTAN MENU
   public function naikan() {
     $id = $this->input->post('id');
     $urutan = $this->input->post('urutan');
@@ -40,6 +45,8 @@ class Menu extends CI_Controller {
   }
 
 
+
+  // FUNGSI MENURUNKAN URUTAN MENU
   public function turunkan() {
     $id = $this->input->post('id');
     $urutan = $this->input->post('urutan');
@@ -167,7 +174,6 @@ class Menu extends CI_Controller {
       $insert = $this->menu->save($data);
 
       $this->load->helper('file');
-
       if ($this->input->post('tipe') == 1) {
 
         $data = "

@@ -13,7 +13,7 @@ class Profile extends CI_Controller {
     $data['user'] = $this->db->get_where('user', ['email' => $email])->row_array();
     $page = 'user/myprofile';
     $data['title'] = 'My Profile';
-    $this->load->view('user/myprofile', $data);
+    pages($page, $data);
   }
 
   public function edit() {
@@ -21,7 +21,7 @@ class Profile extends CI_Controller {
     $data['user'] = $this->db->get_where('user', ['email' => $email])->row_array();
     $page = 'user/edit';
     $data['title'] = 'Edit Profile';
-    $this->load->view('user/edit', $data);
+    pages($page, $data);
   }
 
   public function update() {
@@ -84,7 +84,7 @@ class Profile extends CI_Controller {
       ]);
 
     if ($this->form_validation->run() == FALSE) {
-      $this->load->view('user/changepw', $data);
+      pages($page, $data);
     } else
     {
 

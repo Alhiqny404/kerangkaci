@@ -1,8 +1,3 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-$this->load->view('dist/_partials/header');
-?>
-<!-- Main Content -->
 <div class="main-content">
   <section class="section">
     <div class="section-header">
@@ -18,5 +13,4 @@ $this->load->view('dist/_partials/header');
 </div>
 
 
-
-<?php $this->load->view('dist/_partials/footer'); ?>
+<?php $this->load->view('_layouts/js.php'); ?>

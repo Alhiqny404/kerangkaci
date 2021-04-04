@@ -1,5 +1,3 @@
-<?php $this->load->view('dist/_partials/header'); ?>
-
 <!-- Main Content -->
 <div class="main-content">
   <section class="section">
@@ -42,4 +40,4 @@
 </section>
 </div>
 
-<?php $this->load->view('dist/_partials/footer'); ?>
+<?php $this->load->view('_layouts/js'); ?>
