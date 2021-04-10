@@ -3,6 +3,7 @@
   <section class="section">
     <div class="section-header">
       <h1><?=$title; ?></h1>
+      <?php $this->load->view('_layouts/breadcrumb'); ?>
     </div>
 
     <div class="section-body">
@@ -58,7 +59,7 @@
   $(document).ready(function() {
     $.ajax({
       url: "<?= site_url('sistem/aplikasi/ajax') ?>",
-      type: 'get',
+      type: 'post',
       dataType: "JSON",
       success: function(data) {
         $('#name_app').val(data[0].name_app);

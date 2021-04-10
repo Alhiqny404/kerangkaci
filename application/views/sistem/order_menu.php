@@ -11,6 +11,7 @@
   <section class="section">
     <div class="section-header">
       <h1><?=$title; ?></h1>
+      <?php $this->load->view('_layouts/breadcrumb'); ?>
     </div>
 
     <div class="section-body">

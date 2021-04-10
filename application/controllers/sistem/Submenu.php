@@ -18,6 +18,7 @@ class Submenu extends CI_Controller {
     pages($page, $data);
   }
 
+
   public function status() {
     $id = $this->input->post('id');
     $status = $this->db->get_where('sub_menu', ['id' => $id])->row_array()['is_active'];
@@ -43,11 +44,8 @@ class Submenu extends CI_Controller {
       $row[] = $ls->icon;
       $row[] = site_url().$ls->url;
       $ls->is_active > 0 ?
-
-      $row[] = '<div class="form-check"><input class="form-check-input" checked="checked" onclick="status('."'".$ls->id."'".')" type="checkbox" value="" id="defaultCheck1"></div>'
-      : $row[] = '<div class="form-check"><input class="form-check-input" onclick="status('."'".$ls->id."'".')" type="checkbox" value="" id="defaultCheck1"></div>';
-
-      //add html for action
+      $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" checked="checked" class="custom-switch-input" onclick="status('."'".$ls->id."'".')"> <span class="custom-switch-indicator"></span></label></tr>'
+      : $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" onclick="status('."'".$ls->id."'".')"> <span class="custom-switch-indicator"></span></label></tr>';
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
              onclick="edit('."'".$ls->id."'".')"><i class="fas fa-edit"></i> edit</a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
                   onclick="delete_submenu('."'".$ls->id."'".','."'".$ls->title."'".')"><i class="fas fa-trash"> hapus</i></a>';
@@ -61,7 +59,6 @@ class Submenu extends CI_Controller {
       "recordsFiltered" => $this->submenu->count_filtered(),
       "data" => $data,
     ];
-    //output to json format
     echo json_encode($output);
   }
 
@@ -70,7 +67,8 @@ class Submenu extends CI_Controller {
     echo json_encode($data);
   }
 
-  public function ajax_add() {
+
+  private function _set_validate() {
 
     $this->form_validation->set_rules('menu_id', 'Menu_id', 'required',
       [
@@ -95,7 +93,12 @@ class Submenu extends CI_Controller {
         'required' => 'tipe tidak boleh kosong'
       ]
     );
+  }
 
+
+  public function ajax_add() {
+
+    $this->_set_validate();
     if ($this->form_validation->run() == FALSE) {
       $err = [
         'menu_id' => form_error('menu_id'),
@@ -113,6 +116,7 @@ class Submenu extends CI_Controller {
         'url' => htmlspecialchars($this->input->post('url'), true),
       ];
       $insert = $this->submenu->save($data);
+
       echo json_encode(array("status" => TRUE));
     }
 
@@ -123,29 +127,7 @@ class Submenu extends CI_Controller {
 
   public function ajax_update() {
 
-    $this->form_validation->set_rules('menu_id', 'Menu_id', 'required',
-      [
-        'required' => 'menu tidak boleh kosong',
-        'min_length' => 'nama menu terlalu pendek'
-      ]
-    );
-    $this->form_validation->set_rules('title', 'Title', 'required|min_length[3]',
-      [
-        'required' => 'title tidak boleh kosong',
-        'min_length' => 'nama title terlalu pendek'
-      ]
-    );
-    $this->form_validation->set_rules('icon', 'Icon', 'required|min_length[3]',
-      [
-        'required' => 'icon tidak boleh kosong',
-        'min_length' => 'nama icon terlalu pendek'
-      ]
-    );
-    $this->form_validation->set_rules('url', 'Url', 'required',
-      [
-        'required' => 'tipe tidak boleh kosong'
-      ]
-    );
+    $this->_set_validate();
 
     if ($this->form_validation->run() == FALSE) {
       $err = [

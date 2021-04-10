@@ -1,6 +1,3 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
 <body>
   <div id="app">
     <div class="main-wrapper main-wrapper-1">
@@ -24,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <div class="dropdown-list-content dropdown-list-message">
                 <a href="#" class="dropdown-item dropdown-item-unread">
                   <div class="dropdown-item-avatar">
-                    <img alt="image" src="<?php echo base_url('stisla/'); ?>assets/img/avatar/avatar-1.png" class="rounded-circle">
+                    <img alt="image" src="<?= base_url('stisla/'); ?>assets/img/avatar/avatar-1.png" class="rounded-circle">
                     <div class="is-online"></div>
                   </div>
                   <div class="dropdown-item-desc">
@@ -39,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                 <a href="#" class="dropdown-item dropdown-item-unread">
                   <div class="dropdown-item-avatar">
-                    <img alt="image" src="<?php echo base_url('stisla/'); ?>assets/img/avatar/avatar-2.png" class="rounded-circle">
+                    <img alt="image" src="<?= base_url('stisla/'); ?>assets/img/avatar/avatar-2.png" class="rounded-circle">
                   </div>
                   <div class="dropdown-item-desc">
                     <b>Dedik Sugiharto</b>
@@ -53,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                 <a href="#" class="dropdown-item dropdown-item-unread">
                   <div class="dropdown-item-avatar">
-                    <img alt="image" src="<?php echo base_url('stisla/'); ?>assets/img/avatar/avatar-3.png" class="rounded-circle">
+                    <img alt="image" src="<?= base_url('stisla/'); ?>assets/img/avatar/avatar-3.png" class="rounded-circle">
                     <div class="is-online"></div>
                   </div>
                   <div class="dropdown-item-desc">
@@ -68,7 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                 <a href="#" class="dropdown-item">
                   <div class="dropdown-item-avatar">
-                    <img alt="image" src="<?php echo base_url('stisla/'); ?>assets/img/avatar/avatar-4.png" class="rounded-circle">
+                    <img alt="image" src="<?= base_url('stisla/'); ?>assets/img/avatar/avatar-4.png" class="rounded-circle">
                   </div>
                   <div class="dropdown-item-desc">
                     <b>Ardian Rahardiansyah</b>
@@ -82,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </a>
                 <a href="#" class="dropdown-item">
                   <div class="dropdown-item-avatar">
-                    <img alt="image" src="<?php echo base_url('stisla/'); ?>assets/img/avatar/avatar-5.png" class="rounded-circle">
+                    <img alt="image" src="<?= base_url('stisla/'); ?>assets/img/avatar/avatar-5.png" class="rounded-circle">
                   </div>
                   <div class="dropdown-item-desc">
                     <b>Alfa Zulkarnain</b>
@@ -183,10 +180,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <a href="<?= site_url('profile'); ?>" class="dropdown-item has-icon">
                 <i class="far fa-user"></i> Profile
               </a>
-              <a href="<?php echo base_url('stisla/'); ?>dist/features_activities" class="dropdown-item has-icon">
+              <a href="<?= base_url('stisla/'); ?>dist/features_activities" class="dropdown-item has-icon">
                 <i class="fas fa-bolt"></i> Activities
               </a>
-              <a href="<?php echo base_url('stisla/'); ?>dist/features_settings" class="dropdown-item has-icon">
+              <a href="<?= base_url('stisla/'); ?>dist/features_settings" class="dropdown-item has-icon">
                 <i class="fas fa-cog"></i> Settings
               </a>
               <div class="dropdown-divider"></div>

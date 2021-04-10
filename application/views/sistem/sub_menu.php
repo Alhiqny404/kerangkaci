@@ -11,6 +11,7 @@
   <section class="section">
     <div class="section-header">
       <h1><?=$title; ?></h1>
+      <?php $this->load->view('_layouts/breadcrumb'); ?>
     </div>
 
     <div class="section-body">
@@ -159,8 +160,8 @@
         $('[name="icon"]').val(data.icon);
         $('[name="url"]').val(data.url);
 
-        $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-        $('.modal-title').text('Edit submenu'); // Set title to Bootstrap modal title
+        $('#modal_form').modal('show');
+        $('.modal-title').text('Edit submenu');
 
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -170,7 +171,7 @@
   }
 
   function reload_table() {
-    table.ajax.reload(null, false); //reload datatable ajax
+    table.ajax.reload(null, false);
   }
 
   function save() {

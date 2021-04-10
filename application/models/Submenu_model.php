@@ -21,7 +21,6 @@ class Submenu_model extends CI_Model {
   }
 
   private function _get_datatables_query() {
-
     $this->db->select('sub_menu.*,menu.menu');
     $this->db->from($this->table);
     $this->db->join('menu', 'sub_menu.menu_id = menu.id');
@@ -52,6 +51,7 @@ class Submenu_model extends CI_Model {
     }
   }
 
+
   function get_datatables() {
     $this->_get_datatables_query();
     if ($_POST['length'] != -1)
@@ -60,11 +60,13 @@ class Submenu_model extends CI_Model {
     return $query->result();
   }
 
+
   function count_filtered() {
     $this->_get_datatables_query();
     $query = $this->db->get();
     return $query->num_rows();
   }
+
 
   public function count_all() {
     $this->db->from($this->table);
@@ -79,16 +81,20 @@ class Submenu_model extends CI_Model {
     return $query->row();
   }
 
+
   public function save($data) {
     $this->db->insert($this->table, $data);
     return $this->db->insert_id();
   }
+
+
 
   public function update($where, $data) {
     $this->db
     ->update($this->table, $data, $where);
     return $this->db->affected_rows();
   }
+
 
   public function delete_by_id($id) {
     $this->db->where('id', $id);

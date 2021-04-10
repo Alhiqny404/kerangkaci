@@ -54,14 +54,17 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 
-$route['sistem/role-access/(:num)'] = 'sistem/roleaccess/$1';
+//$route['sistem/role-access/(:num)'] = 'sistem/roleaccess/$1';
 
 
 $route['user/ganti-password'] = 'user/changepw';
 $route['lupa-password'] = 'register/forgotpw';
 
+$route['master'] = 'more/master';
+$route['sistem'] = 'more/sistem';
 
 
+/*
 
 // ROUTE AJAX
 $route['ajax/role'] = 'role/ajaxList';
@@ -69,3 +72,5 @@ $route['ajax/role/add'] = 'role/ajax_add';
 $route['ajax/role/update'] = 'role/ajax_update';
 $route['ajax/role/edit/(:num)'] = 'role/ajax_edit/$1';
 $route['ajax/role/delete/(:num)'] = 'role/ajax_delete/$1';
+
+*/

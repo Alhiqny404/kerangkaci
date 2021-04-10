@@ -48,17 +48,10 @@ class User extends CI_Controller {
       $row[] = '<img src="'.base_url("uploads/image/profile/".$ls->avatar).'" width="70px">';
       $row[] = $ls->role;
       $row[] = date('d-m-Y', $ls->created_at);
-      if ($ls->is_active == 1) {
+      $ls->is_active == 1 ?
+      $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" checked="checked" class="custom-switch-input" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')"> <span class="custom-switch-indicator"></span></label></tr>'
+      : $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')"> <span class="custom-switch-indicator"></span></label></tr>';
 
-        $row[] = '<div class="custom-checkbox custom-control"><input type="checkbox" checked="checked" data-checkboxes="mygroup" class="custom-control-input" id="'.$ls->id.'" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')"><label for="'.$ls->id.'" class="custom-control-label">&nbsp;</label></div>';
-
-      } else
-      {
-        $row[] = '<div class="custom-checkbox custom-control"><input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="'.$ls->id.'" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')"><label for="'.$ls->id.'" class="custom-control-label">&nbsp;</label></div>';
-      }
-
-
-      //add html for action
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
         onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i></a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
         onclick="delete_user('."'".$ls->id."'".','."'".$ls->nama."'".')"><i class="fa fa-trash"> </i></a><a class="btn btn-sm btn-info" href="javascript:void(0)" title="detail"
@@ -144,7 +137,6 @@ class User extends CI_Controller {
   }
   public function ajax_update() {
 
-
     $this->form_validation->set_rules('nama', 'Nama', 'trim|required|min_length[2]',
       [
         'required' => 'nama harus diisi!',
@@ -186,8 +178,13 @@ class User extends CI_Controller {
 
   }
   public function ajax_delete($id) {
+    $avatar = $this->user->get_by_id($id)->avatar;
+    if ($avatar != 'avatar.png') {
+      unlink(FCPATH . 'uploads/image/profile/' . $avatar);
+    } else {}
     $this->user->delete_by_id($id);
-    echo json_encode(array("status" => TRUE));
+
+    echo json_encode(["status" => TRUE]);
   }
 
 

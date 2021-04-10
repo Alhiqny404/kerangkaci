@@ -11,6 +11,7 @@
   <section class="section">
     <div class="section-header">
       <h1><?=$title; ?></h1>
+      <?php $this->load->view('_layouts/breadcrumb'); ?>
     </div>
 
     <div class="section-body">
@@ -268,7 +269,6 @@
           type: "POST",
           dataType: "JSON",
           success: function(data) {
-            //if success reload ajax table
             $('#modal_form').modal('hide');
             reload_table();
             swal.close();

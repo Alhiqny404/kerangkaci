@@ -5,7 +5,7 @@ class Login extends CI_Controller {
   public function index() {
     // JIKA TELAH LOGIN
     if ($this->session->userdata('email')) {
-      redirect('admin');
+      redirect('dashboard');
     }
     // JIKA BELUM KOGIN
     else {
@@ -17,6 +17,7 @@ class Login extends CI_Controller {
 
   public function validate() {
 
+    // SET RULES PADA FORM LOGIN
     $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email', [
       'required' => 'email harus diisi',
       'valid_email' => 'email tidak valid'
@@ -26,19 +27,27 @@ class Login extends CI_Controller {
       'min_length' => 'password terlalu pendek'
     ]);
 
+
+    // JIKA VALIDASI GAGAL
     if ($this->form_validation->run() == FALSE) {
       $err = [
         'email' => form_error('email'),
         'password' => form_error('password')
       ];
       echo json_encode(['status' => FALSE, 'err' => $err]);
-    } else {
-
+    }
+    // JIKA LOLOS VALIDASI
+    else {
+      // DEKLARASI VARIABLE
       $email = $this->input->post('email');
       $password = $this->input->post('password');
+      // GET DATA USER BERDASARKAN EMAIL
       $user = $this->db->get_where('user', ['email' => $email])->row_array();
+      // JIKA EMAIL BENAR
       if ($user) {
+        // JIKA AKUN AKTIF
         if ($user['is_active'] == 1) {
+          // JIKA PASSWORD BENAR
           if (password_verify($password, $user['password'])) {
             $data = [
               'email' => $user['email'],
@@ -46,27 +55,31 @@ class Login extends CI_Controller {
               'role_id' => $user['role_id']
             ];
             $this->session->set_userdata($data);
+            // JIKA ROLE ADMIN
             if ($user['role_id'] == 1) {
-              // sebagai admin
               echo json_encode(['status' => TRUE, 'url' => 'dashboard']);
-            } else {
-              // sebagai user
-              echo json_encode(['status' => TRUE, 'url' => 'profile']);
             }
-          } else {
-            // password salah
+            // JIKA ROLE SELAIN ADMIN
+            else {
+              echo json_encode(['status' => TRUE, 'url' => 'home']);
+            }
+          }
+          // JIKA PASSWORD SALAH
+          else {
             $err = ['email' => '',
               'password' => 'Password salah'];
             echo json_encode(['status' => FALSE, 'err' => $err]);
           }
-        } else {
-          // akun belum aktif / diblokir
+        }
+        // JIKA AKUN BELUM AKTIF ATAU TERBLOKIR
+        else {
           $err = ['email' => 'Akun Tidak / Belum Aktif',
             'password' => ''];
           echo json_encode(['status' => FALSE, 'err' => $err]);
         }
-      } else {
-        // email tidak terdaftar
+      }
+      // JIKA EMAIL TIDAK TERDAFTAR
+      else {
         $err = ['email' => 'email tidak terdaftar',
           'password' => ''];
         echo json_encode(['status' => FALSE, 'err' => $err]);
@@ -75,14 +88,16 @@ class Login extends CI_Controller {
 
     }
 
-
-
   }
+
+
 
   public function logout() {
     $this->session->sess_destroy();
     redirect('login');
   }
+
+
 
   public function blokir() {
     echo 'Anda tidak bisa mengakses ini'; die;

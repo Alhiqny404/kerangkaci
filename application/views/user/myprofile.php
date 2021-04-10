@@ -3,6 +3,7 @@
   <section class="section">
     <div class="section-header">
       <h1><?=$title; ?></h1>
+      <?php $this->load->view('_layouts/breadcrumb'); ?>
     </div>
 
     <div class="section-body">
@@ -20,7 +21,7 @@
               <div class="d-flex flex-column align-items-center text-center">
                 <img src="<?= base_url('uploads/image/profile/').datauser($this->session->userdata('email'))['avatar']; ?>" alt="Admin" class="rounded-circle" width="150">
                 <div class="mt-3">
-                  <h4><?=$user['nama']; ?></h4>
+                  <h4><?=datauser($this->session->userdata('email'))['nama']; ?></h4>
                   <p class="text-secondary mb-1">
                     Full Stack Developer
                   </p>
@@ -66,7 +67,7 @@
                   <h6 class="mb-0">Full Name</h6>
                 </div>
                 <div class="col-sm-9 text-secondary">
-                  <?=$user['nama']; ?>
+                  <?=datauser($this->session->userdata('email'))['nama']; ?>
                 </div>
               </div>
               <hr>
@@ -74,8 +75,8 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Email</h6>
                 </div>
-                <div class="col-sm-9 text-secondary">
-                  <?=$user['email']; ?>
+                <div class="col-sm-9 text-secondary" id="field-email">
+
                 </div>
               </div>
               <hr>
@@ -172,3 +173,18 @@
 </div>
 
 <?php $this->load->view('_layouts/js'); ?>
+
+
+<script>
+  $(document).ready(function() {
+    $.ajax({
+      url: "<?= site_url('profile/ajax_profile') ?>",
+      type: 'post',
+      dataType: "JSON",
+      cache: false,
+      success: function(data) {
+        $('#field-email').text(data.user[0].email)
+      }
+    });
+  });
+</script>

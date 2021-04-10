@@ -18,7 +18,6 @@ class Menu extends CI_Controller {
     pages($page, $data);
   }
 
-
   // HALAMAN PENGORDERAN MENU
   public function urutan() {
     $page = 'menu/urutan_menu';
@@ -44,8 +43,6 @@ class Menu extends CI_Controller {
     }
   }
 
-
-
   // FUNGSI MENURUNKAN URUTAN MENU
   public function turunkan() {
     $id = $this->input->post('id');
@@ -59,6 +56,7 @@ class Menu extends CI_Controller {
   }
 
 
+  /* ------------  GET DATA JSON   -----------------*/
 
   public function ajaxUrutan() {
     $list = $this->menu->get_datatables();
@@ -80,10 +78,8 @@ class Menu extends CI_Controller {
       "recordsFiltered" => $this->menu->count_filtered(),
       "data" => $data,
     ];
-    //output to json format
     echo json_encode($output);
   }
-
   public function ajaxList() {
     $list = $this->menu->get_datatables();
     $data = [];
@@ -101,12 +97,9 @@ class Menu extends CI_Controller {
         $row[] = 'dropdown';
       }
 
-      //add html for action
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
              onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i> edit</a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
                   onclick="delete_menu('."'".$ls->id."'".','."'".$ls->menu."'".')"><i class="fa fa-trash"> hapus</i></a>';
-
-
       $data[] = $row;
     }
 
@@ -116,22 +109,21 @@ class Menu extends CI_Controller {
       "recordsFiltered" => $this->menu->count_filtered(),
       "data" => $data,
     ];
-    //output to json format
     echo json_encode($output);
   }
-  public function ajax_edit($id) {
-    $data = $this->menu->get_by_id($id);
-    echo json_encode($data);
-  }
-  public function ajax_add() {
-
-    $menu = $this->input->post('menu');
 
 
-    $this->form_validation->set_rules('menu', 'Menu', 'required|min_length[3]',
+
+  /*-----------  CREATE - UPDATE - DELETE  ---------------- */
+
+
+  // SET VALIDASI
+  private function _set_validate() {
+    $this->form_validation->set_rules('menu', 'Menu', 'required|min_length[3]|is_unique[menu.menu]',
       [
         'required' => 'menu tidak boleh kosong',
-        'min_length' => 'nama menu terlalu pendek'
+        'min_length' => 'nama menu terlalu pendek',
+        'is_unique' => 'Menu sudah ada'
       ]
     );
     $this->form_validation->set_rules('title', 'Title', 'required|min_length[3]',
@@ -151,7 +143,20 @@ class Menu extends CI_Controller {
         'required' => 'tipe tidak boleh kosong'
       ]
     );
+  }
 
+
+  // VIEW MODAL EDIT
+  public function ajax_edit($id) {
+    $data = $this->menu->get_by_id($id);
+    echo json_encode($data);
+  }
+
+  // INSERT DATA
+  public function ajax_add() {
+
+    $menu = $this->input->post('menu');
+    $this->_set_validate();
     if ($this->form_validation->run() == FALSE) {
       $err = [
         'menu' => form_error('menu'),
@@ -165,7 +170,7 @@ class Menu extends CI_Controller {
       $i = $this->db->query('SELECT max(urutan) FROM menu')->row_array();
       $urutan = $i['max(urutan)']+1;
       $data = [
-        'menu' => htmlspecialchars($this->input->post('menu'), true),
+        'menu' => htmlspecialchars(strtolower($this->input->post('menu')), true),
         'title' => htmlspecialchars($this->input->post('title'), true),
         'icon' => htmlspecialchars($this->input->post('icon'), true),
         'tipe' => htmlspecialchars($this->input->post('tipe'), true),
@@ -175,56 +180,30 @@ class Menu extends CI_Controller {
 
       $this->load->helper('file');
       if ($this->input->post('tipe') == 1) {
-
-        $data = "
-<?php
+        $data =
+        "<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 class ".ucwords($menu)." extends CI_Controller {
 
+  public function index()
+  {
+    // \$this->load->view('view');
+  }
 
 }";
-
         write_file("./application/controllers/".ucwords($menu).".php", $data);
-
+      } else {
+        mkdir("./application/controllers/".strtolower($menu));
       }
-
-
 
       echo json_encode(["status" => TRUE]);
     }
-
-
-
-
-
   }
+
+
+  // UPDATE DATA
   public function ajax_update() {
-
-
-    $this->form_validation->set_rules('menu', 'Menu', 'required|min_length[3]',
-      [
-        'required' => 'menu tidak boleh kosong',
-        'min_length' => 'nama menu terlalu pendek'
-      ]
-    );
-    $this->form_validation->set_rules('title', 'Title', 'required|min_length[3]',
-      [
-        'required' => 'title tidak boleh kosong',
-        'min_length' => 'nama title terlalu pendek'
-      ]
-    );
-    $this->form_validation->set_rules('icon', 'Icon', 'required|min_length[3]',
-      [
-        'required' => 'icon tidak boleh kosong',
-        'min_length' => 'nama icon terlalu pendek'
-      ]
-    );
-    $this->form_validation->set_rules('tipe', 'Tipe', 'required',
-      [
-        'required' => 'tipe tidak boleh kosong'
-      ]
-    );
+    $this->_set_validate();
 
     if ($this->form_validation->run() == FALSE) {
       $err = [
@@ -237,7 +216,7 @@ class ".ucwords($menu)." extends CI_Controller {
     } else
     {
       $data = [
-        'menu' => htmlspecialchars($this->input->post('menu'), true),
+        'menu' => htmlspecialchars(strtolower($this->input->post('menu')), true),
         'title' => htmlspecialchars($this->input->post('title'), true),
         'icon' => htmlspecialchars($this->input->post('icon'), true),
         'tipe' => htmlspecialchars($this->input->post('tipe'), true)
@@ -248,11 +227,23 @@ class ".ucwords($menu)." extends CI_Controller {
     }
 
   }
-  public function ajax_delete($id) {
-    $this->menu->delete_by_id($id);
-    echo json_encode(array("status" => TRUE));
-  }
 
+  // DELETE DATA
+  public function ajax_delete($id) {
+    $this->load->helpers('file');
+    $menu = $this->db->get_where('menu', ['id' => $id])->row_array();
+    if ($menu['tipe'] == 1) {
+      unlink("./application/controllers/".ucwords($menu['menu']).".php");
+    } else {
+      delete_files('./application/testing/'.$menu['menu'], TRUE);
+      rmdir('./application/controllers/'.$menu['menu']);
+    }
+    $this->menu->delete_by_id($id); // DELETE MENU
+    $this->db->delete('sub_menu', ['menu_id' => $id]); // DELETE SUB MENU YANG BERSANGKUTAN
+    $this->db->delete('role_menu', ['menu_id' => $id]); // DELETE AKSES YANG BERSANGKUTAN
+    echo json_encode(array("status" => TRUE));
+
+  }
 
 
 

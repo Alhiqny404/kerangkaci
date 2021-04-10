@@ -11,6 +11,7 @@
   <section class="section">
     <div class="section-header">
       <h1><?=$title; ?></h1>
+      <?php $this->load->view('_layouts/breadcrumb'); ?>
     </div>
 
     <div class="section-body">
@@ -59,21 +60,21 @@
 
       "processing": true, //Feature control the processing indicator.
       "serverSide": true, //Feature control DataTables' server-side processing mode.
-
       // Load data for the table's content from an Ajax source
       "ajax": {
         "url": "<?= site_url('sistem/role/ajaxList') ?>",
         "type": "POST"
       },
-
       //Set column definition initialisation properties.
       "columnDefs": [{
         "targets": [-1], //last column
         "orderable": false, //set not orderable
       },
       ],
-
     });
+
+
+
   });
 
 
@@ -87,6 +88,49 @@
     console.log(save_method);
   }
 
+
+  function modal_access(id, role) {
+    $.ajax({
+      url: "<?= site_url('sistem/role/menu_access/') ?>"+id,
+      method: "POST",
+      dataType: "JSON",
+      success: function(data) {
+        $('#modal_access').modal('show');
+        $('#table-access').html(data);
+        $('.modal-title').text('Hak Akses '+role);
+      }
+    });
+  }
+
+
+
+
+  function changeAccess(menuId, roleId) {
+    console.log('masuk');
+
+    $.ajax({
+      url: "<?= site_url('sistem/role/changeAccess'); ?>",
+      type: "post",
+      data: {
+        menuId: menuId,
+        roleId: roleId
+      },
+      success: function() {
+        iziToast.success({
+          title: 'UPDATE!',
+          message: 'Akses Telah diubah',
+          position: 'topRight'
+        });
+        console.log('success');
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert('Error get data from ajax');
+      }
+
+    });
+  }
+
+
   function edit(id) {
     save_method = 'update';
     $('#form')[0].reset(); // reset form on modals
@@ -99,6 +143,7 @@
       type: "GET",
       dataType: "JSON",
       success: function(data) {
+        console.log(data);
 
         $('[name="id"]').val(data.id);
         $('[name="role"]').val(data.role);
@@ -168,8 +213,6 @@
   }
 
   function delete_role(id) {
-
-
 
     swal({
       title: 'Kamu Yakin?',
@@ -245,6 +288,36 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="btnSave" onclick="save()">SIMPAN</button>
 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_access">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="reset_tbaccess()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Menu</th>
+                <th scope="col">Akses</th>
+              </tr>
+            </thead>
+            <tbody id="table-access">
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

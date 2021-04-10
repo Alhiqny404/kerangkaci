@@ -9,8 +9,7 @@ class Profile extends CI_Controller {
   }
 
   public function index() {
-    $email = $this->session->userdata('email');
-    $data['user'] = $this->db->get_where('user', ['email' => $email])->row_array();
+
     $page = 'user/myprofile';
     $data['title'] = 'My Profile';
     pages($page, $data);
@@ -25,38 +24,55 @@ class Profile extends CI_Controller {
   }
 
   public function update() {
-    $email = $this->session->userdata('email');
-    $data['user'] = $this->db->get_where('user', ['email' => $email])->row_array();
-    $nama = $this->input->post('nama');
-    $email = $this->input->post('email');
-    $avatar = $this->input->post('avatar');
 
-    $image = $_FILES['avatar']['name'];
-    if ($image) {
-      $config['upload_path'] = './uploads/image/profile';
-      $config['allowed_types'] = 'jpeg|jpg|png';
-      $config['max_size'] = 20000;
+    $this->form_validation->set_rules('nama', 'Nama', 'trim|required|max_length[10]', [
+      'required' => 'Nama panggilan tidak boleh kosong',
+      'max_length' => 'Nama panggilan terlalu panjang'
+    ]);
 
-      $this->load->library('upload', $config);
+    if ($this->form_validation->run() == false) {
+      $err = [
+        'nama' => form_error('nama')
+      ];
+      echo json_encode(['status' => FALSE, 'err' => $err]);
 
-      if ($this->upload->do_upload('avatar')) {
-        $oldAvatar = $data['user']['avatar'];
-        if ($oldAvatar != 'avatar.png') {
-          unlink(FCPATH . 'uploads/image/profile/' . $oldAvatar);
+    } else {
+      $nama = htmlspecialchars($this->input->post('nama'), true);
+      $email = htmlspecialchars($this->input->post('email'), true);
+      $avatar = htmlspecialchars($this->input->post('avatar'), true);
+
+      $image = $_FILES['avatar']['name'];
+      if ($image) {
+        $config['upload_path'] = './uploads/image/profile';
+        $config['allowed_types'] = 'jpeg|jpg|png';
+        $config['file_name'] = time().'_'.$image;
+        $config['max_size'] = 20000;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('avatar')) {
+          $oldAvatar = $data['user']['avatar'];
+          if ($oldAvatar != 'avatar.png') {
+            unlink(FCPATH . 'uploads/image/profile/' . $oldAvatar);
+          }
+          $this->db->set('avatar', $this->upload->data('file_name'));
+        } else {
+          echo $this->upload->display_errors();
         }
-        $this->db->set('avatar', $this->upload->data('file_name'));
-      } else {
-        echo $this->upload->display_errors();
+
       }
+
+      $this->db->where('email', $email);
+      $this->db->set('nama', $nama);
+      $this->db->update('user');
+
+      echo json_encode(['status' => TRUE]);
 
     }
 
-    $this->db->where('email', $email);
-    $this->db->set('nama', $nama);
-    $this->db->update('user');
 
 
-    redirect('profile/edit');
+
   }
 
   public function changepw() {
@@ -109,6 +125,15 @@ class Profile extends CI_Controller {
         redirect('profile/changepw');
       }
     }
+  }
+
+
+
+  public function ajax_profile() {
+    $email = $this->session->userdata('email');
+    $this->db->select('nama, email, avatar');
+    $user = $this->db->get_where('user', ['email' => $email])->result();
+    echo json_encode(['user' => $user]);
   }
 
 

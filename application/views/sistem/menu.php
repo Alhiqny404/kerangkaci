@@ -11,22 +11,7 @@
   <section class="section">
     <div class="section-header">
       <h1><?=$title; ?></h1>
-      <?php
-      $uri = explode('/', $this->uri->uri_string);
-
-
-
-      ?>
-      <div class="section-header-breadcrumb">
-        <div class="breadcrumb-item active">
-          <a href="#">Dashboard</a>
-        </div>
-        <?php foreach ($uri as $uri): ?>
-        <div class="breadcrumb-item">
-          <a href="#"><?=$uri; ?></a>
-        </div>
-        <?php endforeach; ?>
-      </div>
+      <?php $this->load->view('_layouts/breadcrumb') ?>
     </div>
 
     <div class="section-body">
@@ -200,14 +185,14 @@
           if (save_method == 'add') {
             iziToast.success({
               title: 'DITAMBAHKAN!',
-              message: 'role telah ditambahkan',
+              message: 'Menu telah ditambahkan',
               position: 'topRight'
             });
           } else
           {
             iziToast.success({
               title: 'UPDATE!',
-              message: 'role telah diupdate',
+              message: 'Menu telah diupdate',
               position: 'topRight'
             });
           }

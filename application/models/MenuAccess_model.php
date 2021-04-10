@@ -16,12 +16,6 @@ class MenuAccess_Model extends CI_Model {
   }
 
   private function _get_datatables_query() {
-    /* $query = "
-	  SELECT * FROM sub_menu
-	  INNER JOIN menu
-	  ON sub_menu.menu_id = menu.id
-	  ";
-	 $this->db->query($query);*/
     $this->db->from($this->table);
     $i = 0;
 

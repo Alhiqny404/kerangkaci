@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Menu_Model extends CI_Model {
 
+  // DEKLARASI VARIABLES
   var $table = 'menu';
   var $column_order = ['urutan',
     'menu',
@@ -10,17 +11,16 @@ class Menu_Model extends CI_Model {
     'icon',
     'tipe',
     null];
-  var $column_search = ['menu',
-    'title',
-    'icon',
-    'tipe',
-    'urutan'];
+  var $column_search = ['menu'];
   var $order = ['urutan' => 'asc'];
+
+
 
   public function __construct() {
     parent::__construct();
     $this->load->database();
   }
+
 
   private function _get_datatables_query() {
     $this->db->from($this->table);
@@ -51,6 +51,7 @@ class Menu_Model extends CI_Model {
     }
   }
 
+  // GET DATA
   function get_datatables() {
     $this->_get_datatables_query();
     if ($_POST['length'] != -1)
@@ -59,18 +60,20 @@ class Menu_Model extends CI_Model {
     return $query->result();
   }
 
+
   function count_filtered() {
     $this->_get_datatables_query();
     $query = $this->db->get();
     return $query->num_rows();
   }
 
+
   public function count_all() {
     $this->db->from($this->table);
     return $this->db->count_all_results();
   }
 
-
+  // GET BERDASARKAN ID
   public function get_by_id($id) {
     $this->db->from($this->table);
     $this->db->where('id', $id);
@@ -78,17 +81,19 @@ class Menu_Model extends CI_Model {
     return $query->row();
   }
 
+  // INSERT DATA
   public function save($data) {
     $this->db->insert($this->table, $data);
     return $this->db->insert_id();
   }
 
+  // UPDATE DATA
   public function update($where, $data) {
-    $this->db
-    ->update($this->table, $data, $where);
+    $this->db->update($this->table, $data, $where);
     return $this->db->affected_rows();
   }
 
+  // DELETE DATA
   public function delete_by_id($id) {
     $this->db->where('id', $id);
     $this->db->delete($this->table);

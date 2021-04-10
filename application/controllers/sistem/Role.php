@@ -23,16 +23,26 @@ class Role extends CI_Controller {
     pages($page, $data);
   }
 
+  public function menu_access($id) {
+    $menu = $this->db->get_where('menu')->result();
+    $i = 1;
+    foreach ($menu as $m) {
+      $row[] = "<tr>";
+      $row[] = "<td>".$i++."</td><td>{$m->menu}</td><label class=\"custom-switch mt-2\"></td>";
+      $this->db->where('role_id', $id);
+      $this->db->where('menu_id', $m->id);
+      $return = $this->db->get('role_menu');
+      $return->num_rows() > 0 ?
+      $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" checked="checked" class="custom-switch-input" onclick="changeAccess('."'".$m->id."'".','."'".$id."'".')"> <span class="custom-switch-indicator"></span></label></tr>':
+      $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" onclick="changeAccess('."'".$m->id."'".','."'".$id."'".')"> <span class="custom-switch-indicator"></span></label></tr>';
+      $row[] = "</tr>";
 
-  // halaman akses
-  public function akses($id) {
-    $data['role'] = $this->db->get_where('role', ['id' => $id])->row_array();
-    $data['menu'] = $this->db->get('menu')->result_array();
-    $data['title'] = 'Role';
-    $page = 'sistem/access_role';
-    pages($page, $data);
+
+
+
+    }
+    echo json_encode($row);
   }
-
 
   // proses ubah akses
   public function changeAccess() {
@@ -54,40 +64,6 @@ class Role extends CI_Controller {
   }
 
 
-  public function ajaxAccess($id) {
-    $list = $this->access->get_datatables();
-
-
-    $data = [];
-    $no = $_POST['start'];
-    foreach ($list as $ls) {
-      $no++;
-      $row = [];
-      $row[] = $ls->urutan;
-      $row[] = $ls->menu;
-
-      $this->db->where('role_id', $id);
-      $this->db->where('menu_id', $ls->id);
-      $return = $this->db->get('role_menu');
-      $return->num_rows() > 0 ?
-      $row[] = '<div class="form-check"><input class="form-check-input" checked="checked" onclick="changeAccess('."'".$ls->id."'".','."'".$id."'".')" type="checkbox" value="" id="defaultCheck1"></div>'
-      : $row[] = '<div class="form-check"><input class="form-check-input" onclick="changeAccess('."'".$ls->id."'".','."'".$id."'".')" type="checkbox" value="" id="defaultCheck1"></div>';
-
-      $data[] = $row;
-    }
-
-    $output = [
-      "draw" => $_POST['draw'],
-      "recordsTotal" => $this->role->count_all(),
-      "recordsFiltered" => $this->role->count_filtered(),
-      "data" => $data,
-    ];
-
-    //output to json format
-    echo json_encode($output);
-  }
-
-
   // data ajax untuk halaman utama
   public function ajaxList() {
     $list = $this->role->get_datatables();
@@ -103,7 +79,7 @@ class Role extends CI_Controller {
       $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
              onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i> Edit</a> <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
                   onclick="delete_role('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-trash"></i> Hapus</a> <a class="btn btn-sm btn-warning" href="javascript:void(0)"
-                  onclick="akses('."'".$ls->id."'".')"><i class="fa fa-universal-access"></i> Hak Akses Menu</a>';
+                  onclick="modal_access('."'".$ls->id."'".','."'".$ls->role."'".')"><i class="fa fa-universal-access"></i>Akses Menu</a> ';
 
       $data[] = $row;
     }
@@ -114,7 +90,6 @@ class Role extends CI_Controller {
       "recordsFiltered" => $this->role->count_filtered(),
       "data" => $data,
     ];
-    //output to json format
     echo json_encode($output);
   }
   public function ajax_edit($id) {
@@ -122,8 +97,8 @@ class Role extends CI_Controller {
     echo json_encode($data);
   }
 
-  // insert data
-  public function ajax_add() {
+
+  private function _set_validate() {
     $this->form_validation->set_rules('role',
       'Role',
       'required|min_length[3]',
@@ -132,6 +107,13 @@ class Role extends CI_Controller {
         'min_length' => 'nama role terlalu pendek'
       ]
     );
+  }
+
+
+  // insert data
+  public function ajax_add() {
+
+    $this->_set_validate();
 
     if ($this->form_validation->run() == FALSE) {
       $errors = validation_errors();
@@ -146,12 +128,7 @@ class Role extends CI_Controller {
 
   // update data
   public function ajax_update() {
-    $this->form_validation->set_rules('role', 'Role', 'required|min_length[3]',
-      [
-        'required' => 'role tidak boleh kosong',
-        'min_length' => 'nama role terlalu pendek'
-      ]
-    );
+    $this->_set_validate();
 
     if ($this->form_validation->run() == FALSE) {
       $errors = validation_errors();
@@ -168,6 +145,7 @@ class Role extends CI_Controller {
   // delete data
   public function ajax_delete($id) {
     $this->role->delete_by_id($id);
+    $this->db->delete('user', ['role_id' => $id]);
     echo json_encode(["status" => TRUE]);
   }
 
