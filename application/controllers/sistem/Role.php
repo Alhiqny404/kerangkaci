@@ -144,8 +144,8 @@ class Role extends CI_Controller {
 
   // delete data
   public function ajax_delete($id) {
-    $this->role->delete_by_id($id);
     $this->db->delete('user', ['role_id' => $id]);
+    $this->role->delete_by_id($id);
     echo json_encode(["status" => TRUE]);
   }
 

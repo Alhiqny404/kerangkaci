@@ -25,6 +25,7 @@ class User_model extends CI_Model {
 
   private function _get_datatables_query() {
     $this->db->select('user.*,role.role');
+    $this->db->where('email !=', $this->session->userdata('email'));
     $this->db->from($this->table);
     $this->db->join('role', 'user.role_id = role.id');
     $i = 0;
