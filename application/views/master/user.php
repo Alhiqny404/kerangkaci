@@ -72,6 +72,7 @@
       data: {
         id: id, status: status
       },
+      cache: false,
       success: function() {
         reload_table();
         if (status == 0) {
@@ -145,8 +146,9 @@
     //Ajax Load data from ajax
     $.ajax({
       url: "<?= site_url('master/user/ajax_edit/') ?>" + id,
-      type: "GET",
+      type: "POST",
       dataType: "JSON",
+      cache: false,
       success: function(data) {
 
         $('[name="id"]').val(data.id);
@@ -186,6 +188,7 @@
       type: "POST",
       data: $('#form').serialize(),
       dataType: "JSON",
+      cache: false,
       success: function(data) {
         //if success close modal and reload ajax table
 
@@ -268,6 +271,7 @@
           url: "<?php echo site_url('master/user/ajax_delete/') ?>"+id,
           type: "POST",
           dataType: "JSON",
+          cache: false,
           success: function(data) {
             $('#modal_form').modal('hide');
             reload_table();

@@ -94,6 +94,7 @@
       url: "<?= site_url('sistem/role/menu_access/') ?>"+id,
       method: "POST",
       dataType: "JSON",
+      cache: false,
       success: function(data) {
         $('#modal_access').modal('show');
         $('#table-access').html(data);
@@ -115,6 +116,7 @@
         menuId: menuId,
         roleId: roleId
       },
+      cache: false,
       success: function() {
         iziToast.success({
           title: 'UPDATE!',
@@ -140,8 +142,9 @@
     //Ajax Load data from ajax
     $.ajax({
       url: "<?= site_url('sistem/role/ajax_edit/') ?>" + id,
-      type: "GET",
+      type: "POST",
       dataType: "JSON",
+      cache: false,
       success: function(data) {
         console.log(data);
 
@@ -177,6 +180,7 @@
       type: "POST",
       data: $('#form').serialize(),
       dataType: "JSON",
+      cache: false,
       success: function(data) {
         //if success close modal and reload ajax table
         console.log(data.status);
@@ -228,6 +232,7 @@
           url: "<?php echo site_url('sistem/role/ajax_delete/') ?>"+id,
           type: "POST",
           dataType: "JSON",
+          cache: false,
           success: function(data) {
             //if success reload ajax table
             $('#modal_form').modal('hide');

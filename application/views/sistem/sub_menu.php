@@ -112,6 +112,7 @@
     $.ajax({
       url: "<?= site_url('sistem/submenu/status'); ?>",
       type: "post",
+      cache: false,
       data: {
         id: id
       },
@@ -150,8 +151,9 @@
     //Ajax Load data from ajax
     $.ajax({
       url: "<?= site_url('sistem/submenu/ajax_edit/') ?>" + id,
-      type: "GET",
+      type: "POST",
       dataType: "JSON",
+      cache: false,
       success: function(data) {
 
         $('[name="id"]').val(data.id);
@@ -189,6 +191,7 @@
       type: "POST",
       data: $('#form').serialize(),
       dataType: "JSON",
+      cache: false,
       success: function(data) {
         //if success close modal and reload ajax table
 
@@ -269,6 +272,7 @@
           url: "<?php echo site_url('sistem/submenu/ajax_delete/') ?>"+id,
           type: "POST",
           dataType: "JSON",
+          cache: false,
           success: function(data) {
             //if success reload ajax table
             $('#modal_form').modal('hide');

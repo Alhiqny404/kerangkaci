@@ -61,6 +61,7 @@
       url: "<?= site_url('sistem/aplikasi/ajax') ?>",
       type: 'post',
       dataType: "JSON",
+      cache: false,
       success: function(data) {
         $('#name_app').val(data[0].name_app);
         $('#color_navbar').val(data[0].color_navbar);
@@ -80,6 +81,7 @@
       type: "post",
       data: $('#form').serialize(),
       dataType: "JSON",
+      cache: false,
       success: function(data) {
         if (data.status == false) {
           console.log(data.err);

@@ -109,6 +109,7 @@
         urutan: urutan
       },
       dataType: 'JSON',
+      cache: false,
       success: function(data) {
 
         iziToast.success({
@@ -133,6 +134,7 @@
         urutan: urutan
       },
       dataType: 'JSON',
+      cache: false,
       success: function(data) {
         reload_table();
 
