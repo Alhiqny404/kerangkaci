@@ -42,7 +42,7 @@ class Submenu extends CI_Controller {
       $row[] = $ls->menu;
       $row[] = $ls->title;
       $row[] = $ls->icon;
-      $row[] = site_url().$ls->url;
+      $row[] = $ls->url;
       $ls->is_active > 0 ?
       $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" checked="checked" class="custom-switch-input" onclick="status('."'".$ls->id."'".')"> <span class="custom-switch-indicator"></span></label></tr>'
       : $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" onclick="status('."'".$ls->id."'".')"> <span class="custom-switch-indicator"></span></label></tr>';

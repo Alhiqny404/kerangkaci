@@ -12,7 +12,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <!-- General CSS Files -->
   <link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/bootstrap/css/bootstrap.min.css">
 
-
   <link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="<?= base_url('stisla/'); ?>assets/modules/izitoast/css/iziToast.min.css">
   <script src="<?= base_url('stisla/'); ?>assets/modules/sweetalert/sweetalert.min.js"></script>
@@ -34,4 +33,3 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   </script>
   <!-- /END GA -->
 </head>
-`

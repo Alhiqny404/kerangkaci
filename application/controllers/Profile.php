@@ -6,6 +6,7 @@ class Profile extends CI_Controller {
   public function __construct() {
     parent::__construct();
     harus_login();
+    $this->load->model('User_model', 'user');
   }
 
   public function index() {
@@ -17,7 +18,7 @@ class Profile extends CI_Controller {
 
   public function edit() {
     $email = $this->session->userdata('email');
-    $data['user'] = $this->db->get_where('user', ['email' => $email])->row_array();
+    $data['user'] = $this->user->get_where(['email' => $email])->row_array();
     $page = 'user/edit';
     $data['title'] = 'Edit Profile';
     pages($page, $data);
@@ -77,7 +78,7 @@ class Profile extends CI_Controller {
 
   public function changepw() {
     $email = $this->session->userdata('email');
-    $data['user'] = $this->db->get_where('user', ['email' => $email])->row_array();
+    $data['user'] = $this->user->get_where(['email' => $email])->row_array();
     $page = 'user/changepw';
     $data['title'] = 'Ganti Password';
 
@@ -132,7 +133,8 @@ class Profile extends CI_Controller {
   public function ajax_profile() {
     $email = $this->session->userdata('email');
     $this->db->select('nama, email, avatar');
-    $user = $this->db->get_where('user', ['email' => $email])->result();
+    $user = $this->user->get_where(['email' => $email])->result();
+    //$user = $this->db->get_where('user', ['email' => $email])->result();
     echo json_encode(['user' => $user]);
   }
 

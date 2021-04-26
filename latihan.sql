@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 23, 2021 at 08:18 PM
--- Server version: 10.4.17-MariaDB
--- PHP Version: 7.3.27
+-- Host: localhost
+-- Waktu pembuatan: 26 Apr 2021 pada 18.06
+-- Versi server: 5.6.38
+-- Versi PHP: 7.3.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `menu`
+-- Struktur dari tabel `aplikasi`
+--
+
+CREATE TABLE `aplikasi` (
+  `id` int(11) NOT NULL,
+  `name_app` varchar(285) NOT NULL,
+  `color_navbar` varchar(128) NOT NULL,
+  `color_sidebar` varchar(128) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data untuk tabel `aplikasi`
+--
+
+INSERT INTO `aplikasi` (`id`, `name_app`, `color_navbar`, `color_sidebar`) VALUES
+(1, 'Kerangka saya', '#6777ef', 'white');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `menu`
 --
 
 CREATE TABLE `menu` (
@@ -37,20 +57,20 @@ CREATE TABLE `menu` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `menu`
+-- Dumping data untuk tabel `menu`
 --
 
 INSERT INTO `menu` (`id`, `menu`, `title`, `icon`, `tipe`, `urutan`) VALUES
-(7, 'Dashboard', 'Dashboard', 'fa  fa-tachometer', 1, 2),
-(20, 'sistem', 'system', 'fa fa-cogs', 2, 3),
-(23, 'profile', 'Profile saya', 'fa fa-user', 1, 4),
-(24, 'master', 'Data Master', 'fa fa-user', 2, 5),
-(25, 'home', 'Home', 'fa fa-user', 1, 1);
+(7, 'dashboard', 'Dashboard', 'fas fa-tachometer-alt', 1, 1),
+(20, 'sistem', 'system', 'fas fa-cogs', 2, 4),
+(23, 'profile', 'Profile saya', 'fas fa-user', 1, 3),
+(24, 'master', 'Data Master', 'fas fa-folder-open', 2, 5),
+(25, 'home', 'Home', 'fas fa-user', 1, 2);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `role`
+-- Struktur dari tabel `role`
 --
 
 CREATE TABLE `role` (
@@ -59,17 +79,17 @@ CREATE TABLE `role` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `role`
+-- Dumping data untuk tabel `role`
 --
 
 INSERT INTO `role` (`id`, `role`) VALUES
 (1, 'Admin'),
-(2, 'User');
+(2, 'user');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `role_menu`
+-- Struktur dari tabel `role_menu`
 --
 
 CREATE TABLE `role_menu` (
@@ -79,21 +99,23 @@ CREATE TABLE `role_menu` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `role_menu`
+-- Dumping data untuk tabel `role_menu`
 --
 
 INSERT INTO `role_menu` (`id`, `menu_id`, `role_id`) VALUES
-(29, 24, 1),
-(27, 25, 2),
-(19, 23, 2),
-(25, 23, 1),
-(17, 20, 1),
-(23, 7, 1);
+(94, 23, 2),
+(93, 25, 2),
+(89, 23, 1),
+(90, 24, 1),
+(88, 22, 1),
+(87, 21, 1),
+(86, 20, 1),
+(85, 7, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sub_menu`
+-- Struktur dari tabel `sub_menu`
 --
 
 CREATE TABLE `sub_menu` (
@@ -106,27 +128,21 @@ CREATE TABLE `sub_menu` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `sub_menu`
+-- Dumping data untuk tabel `sub_menu`
 --
 
 INSERT INTO `sub_menu` (`id`, `menu_id`, `title`, `icon`, `url`, `is_active`) VALUES
-(1, 1, 'Dashboard', 'fas fa-fw fa-tachometer-alt', 'dashboard', 1),
-(2, 2, 'My Profile', 'fas fa-fw fa-user', 'User', 1),
-(3, 3, 'Menu Group', 'fas fa-fw fa fa-folder', 'menu', 1),
-(4, 3, 'Sub Menu', 'fas fa-fw fa-folder-open', 'dashboard/system/submenu', 1),
-(5, 1, 'Role', 'fas fa-fw fa-user', 'dashboard/role', 1),
-(6, 2, 'Edit Profile', 'fas fa-fw fa-user-edit', 'user/edit', 1),
-(10, 2, 'Ganti Password', 'fa fw fa-edit', 'user/ganti-password', 1),
-(16, 20, 'Aplikasi', 'fa fa-user', 'sistem/aplikasi', 0),
-(17, 20, 'Menu', 'fas fa-fw fa-user', 'sistem/menu', 0),
-(18, 20, 'submenu', 'fas fa-fw fa-tachometer-alt', 'sistem/submenu', 0),
-(20, 20, 'Role', 'fas fa-fw fa-user', 'sistem/role', 0),
-(21, 24, 'Data User', 'fas fa-fw fa-user', 'master/user', 0);
+(16, 20, 'Aplikasi', 'fas fa-rocket', 'sistem/aplikasi', 1),
+(17, 20, 'Menu', 'fas fa-bars', 'sistem/menu', 1),
+(18, 20, 'submenu', 'fas fa-bars', 'sistem/submenu', 1),
+(20, 20, 'Role', 'fas fa-user-tag', 'sistem/role', 1),
+(21, 24, 'Data User', 'fas fa-users', 'master/user', 1),
+(24, 20, 'Backup Database', 'fas fa-database', 'sistem/backup', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Struktur dari tabel `user`
 --
 
 CREATE TABLE `user` (
@@ -142,18 +158,19 @@ CREATE TABLE `user` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `user`
+-- Dumping data untuk tabel `user`
 --
 
 INSERT INTO `user` (`id`, `nama`, `email`, `password`, `avatar`, `limit_salah`, `is_active`, `role_id`, `created_at`) VALUES
-(7, 'Abror', 'admin@admin.com', '$2y$10$ZJw81E.99/NXniwJMovdoOl57J9ZBBQi7/4tdbyDoivOZumJXb0Mm', 'SAVE_20210315_144413.jpg', 3, 1, 1, 1613835483),
-(14, 'Muhammad Alhiqny Bil Abror', 'muhammadalhiqny@gmail.com', '$2y$10$lc/UdoVMBzD26RaP0IBbnenpUJQeXTsW7Mu9zc.lZ7/E6H9ng8E1u', 'avatar.png', 0, 1, 2, 1616333737),
-(18, 'Nadi Adsh', 'nadi@gmail.com', '$2y$10$NGJ5Jn9KOEuJBjc7MsX85uZIRVcLWGMTiz.vwjztfwi2kT9XxO5gG', 'avatar.png', 0, 1, 1, 1616522833);
+(52, 'user', 'user@example.com', '$2y$10$Ha1ohaad3qbGXPJjz5zP.el.4tl1hAp02OXoCQiYZ89AxbMDtg8Dy', 'avatar.png', 0, 1, 2, 1618042724),
+(55, 'coba', 'coba@gmail.com', '$2y$10$9ZiQK7fruwcbflMN8o6VyOg/iNAoTnC0ATqVsbTfofJd//fFV7STO', 'avatar.png', 0, 1, 2, 1618850338),
+(56, 'Admin Baru', 'admin@admin.com', '$2y$10$64B4B9nu2pA62JvP8qx39OaxjZ2lH6HdRL75enTrqDFQHpfl/BGJm', 'avatar.png', 0, 1, 1, 1619409401),
+(36, 'Admin', 'admin@example.com', '$2y$10$8/rT3lcOLqKQQ.V1AVpMX.EJzeojOxRutN.LSGHVETMHtB9mOq0Zu', 'avatar.png', 0, 1, 1, 1617462568);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_token`
+-- Struktur dari tabel `user_token`
 --
 
 CREATE TABLE `user_token` (
@@ -168,77 +185,89 @@ CREATE TABLE `user_token` (
 --
 
 --
--- Indexes for table `menu`
+-- Indeks untuk tabel `aplikasi`
+--
+ALTER TABLE `aplikasi`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `menu`
 --
 ALTER TABLE `menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `role`
+-- Indeks untuk tabel `role`
 --
 ALTER TABLE `role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `role_menu`
+-- Indeks untuk tabel `role_menu`
 --
 ALTER TABLE `role_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `sub_menu`
+-- Indeks untuk tabel `sub_menu`
 --
 ALTER TABLE `sub_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user`
+-- Indeks untuk tabel `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_token`
+-- Indeks untuk tabel `user_token`
 --
 ALTER TABLE `user_token`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `menu`
+-- AUTO_INCREMENT untuk tabel `aplikasi`
+--
+ALTER TABLE `aplikasi`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT untuk tabel `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
--- AUTO_INCREMENT for table `role`
+-- AUTO_INCREMENT untuk tabel `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
--- AUTO_INCREMENT for table `role_menu`
+-- AUTO_INCREMENT untuk tabel `role_menu`
 --
 ALTER TABLE `role_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
--- AUTO_INCREMENT for table `sub_menu`
+-- AUTO_INCREMENT untuk tabel `sub_menu`
 --
 ALTER TABLE `sub_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT for table `user_token`
+-- AUTO_INCREMENT untuk tabel `user_token`
 --
 ALTER TABLE `user_token`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

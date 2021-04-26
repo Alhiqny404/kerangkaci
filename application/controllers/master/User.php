@@ -48,15 +48,19 @@ class User extends CI_Controller {
       $row[] = '<img src="'.base_url("uploads/image/profile/".$ls->avatar).'" width="70px">';
       $row[] = $ls->role;
       $row[] = date('d-m-Y', $ls->created_at);
-      $ls->is_active == 1 ?
-      $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" checked="checked" class="custom-switch-input" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')"> <span class="custom-switch-indicator"></span></label></tr>'
-      : $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')"> <span class="custom-switch-indicator"></span></label></tr>';
+      if ($ls->email != $this->session->userdata('email')) {
+        $ls->is_active == 1 ?
+        $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" checked="checked" class="custom-switch-input" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')"> <span class="custom-switch-indicator"></span></label></tr>'
+        : $row[] = '<td><label><input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" onclick="coba('."'".$ls->id."'".','."'".$ls->is_active."'".')"> <span class="custom-switch-indicator"></span></label></tr>';
 
-      $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
+        $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit"
         onclick="edit('."'".$ls->id."'".')"><i class="fa fa-edit"></i></a><a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus"
         onclick="delete_user('."'".$ls->id."'".','."'".$ls->nama."'".')"><i class="fa fa-trash"> </i></a><a class="btn btn-sm btn-info" href="javascript:void(0)" title="detail"
         onclick=""><i class="fa fa-eye"></i></a>';
-
+      } else {
+        $row[] = '<td><input type="checkbox" name="custom-switch-checkbox" checked="checked" class="custom-switch-input"> <span class="custom-switch-indicator"></span></tr>';
+        $row[] = '<span class="badge badge-success">SAYA</span>';
+      }
 
       $data[] = $row;
     }

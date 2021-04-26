@@ -5,7 +5,7 @@ class Submenu_model extends CI_Model {
 
   var $table = 'sub_menu';
   var $column_order = [null,
-    'menu_id',
+    'menu',
     'title',
     'icon',
     'url',
@@ -52,6 +52,7 @@ class Submenu_model extends CI_Model {
   }
 
 
+  // GET DATA
   function get_datatables() {
     $this->_get_datatables_query();
     if ($_POST['length'] != -1)
@@ -74,6 +75,7 @@ class Submenu_model extends CI_Model {
   }
 
 
+  // GET BERDASARKAN ID
   public function get_by_id($id) {
     $this->db->from($this->table);
     $this->db->where('id', $id);

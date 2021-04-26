@@ -179,7 +179,7 @@ class Menu extends CI_Controller {
         'urutan' => htmlspecialchars($urutan, true)
       ];
       $insert = $this->menu->save($data);
-
+      /*
       $this->load->helper('file');
       if ($this->input->post('tipe') == 1) {
         $data =
@@ -197,7 +197,7 @@ class ".ucwords($menu)." extends CI_Controller {
       } else {
         mkdir("./application/controllers/".strtolower($menu));
       }
-
+*/
       echo json_encode(["status" => TRUE]);
     }
   }
@@ -205,7 +205,30 @@ class ".ucwords($menu)." extends CI_Controller {
 
   // UPDATE DATA
   public function ajax_update() {
-    $this->_set_validate();
+    $this->form_validation->set_rules('menu', 'Menu', 'required|min_length[3]',
+      [
+        'required' => 'menu tidak boleh kosong',
+        'min_length' => 'nama menu terlalu pendek',
+        'is_unique' => 'Menu sudah ada'
+      ]
+    );
+    $this->form_validation->set_rules('title', 'Title', 'required|min_length[3]',
+      [
+        'required' => 'title tidak boleh kosong',
+        'min_length' => 'nama title terlalu pendek'
+      ]
+    );
+    $this->form_validation->set_rules('icon', 'Icon', 'required|min_length[3]',
+      [
+        'required' => 'icon tidak boleh kosong',
+        'min_length' => 'nama icon terlalu pendek'
+      ]
+    );
+    $this->form_validation->set_rules('tipe', 'Tipe', 'required',
+      [
+        'required' => 'tipe tidak boleh kosong'
+      ]
+    );
 
     if ($this->form_validation->run() == FALSE) {
       $err = [

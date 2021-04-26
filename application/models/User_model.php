@@ -25,7 +25,7 @@ class User_model extends CI_Model {
 
   private function _get_datatables_query() {
     $this->db->select('user.*,role.role');
-    $this->db->where('email !=', $this->session->userdata('email'));
+    //$this->db->where('email !=', $this->session->userdata('email'));
     $this->db->from($this->table);
     $this->db->join('role', 'user.role_id = role.id');
     $i = 0;
@@ -93,6 +93,10 @@ class User_model extends CI_Model {
     $this->db->where('id', $id);
     $query = $this->db->get();
     return $query->row();
+  }
+
+  public function get_where($where) {
+    return $this->db->get_where($this->table, $where);
   }
 
   public function save($data) {

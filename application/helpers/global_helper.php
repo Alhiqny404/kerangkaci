@@ -31,10 +31,10 @@ function akses_submenu() {
   $uri1 = $ci->uri->segment(1);
   $uri2 = $ci->uri->segment(2);
   $url = "{$uri1}/{$uri2}";
-  $status = $ci->db->get_where('sub_menu', ['url' => $url])->row_array()['is_active'];
+  /*$status = $ci->db->get_where('sub_menu', ['url' => $url])->row_array()['is_active'];
   if ($status == 0) {
     echo 'menu ini dinonaktifkan'; die;
-  }
+  }*/
 
 
 }
