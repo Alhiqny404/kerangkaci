@@ -103,5 +103,9 @@ class Submenu_model extends CI_Model {
     $this->db->delete($this->table);
   }
 
+  public function get_where($where) {
+    return $this->db->get_where($this->table, $where);
+  }
+
 
 }

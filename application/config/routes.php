@@ -49,19 +49,52 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'login';
+$route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 
 //$route['sistem/role-access/(:num)'] = 'sistem/roleaccess/$1';
 
+$route['dashboard/sistem/aplikasi'] = 'dashboard/sistem_aplikasi';
+$route['dashboard/sistem/menu'] = 'dashboard/sistem_menu';
+$route['dashboard/sistem/menu/urutan'] = 'dashboard/sisten/sistem_urutan_menu';
+$route['dashboard/sistem/submenu'] = 'dashboard/sistem_submenu';
+$route['dashboard/sistem/role'] = 'dashboard/sistem_role';
+
+
+
+$route['dashboard/master'] = 'dashboard/master_index';
+$route['dashboard/master/user'] = 'dashboard/master_user';
+$route['dashboard/master/category'] = 'dashboard/master_category';
+
+
+
+$route['dashboard/product'] = 'dashboard/product_index';
+$route['dashboard/product/add'] = 'dashboard/product_add';
+$route['dashboard/product/edit/(:num)'] = 'dashboard/product_edit/$1';
+$route['dashboard/product/detail/(:any)'] = 'dashboard/product_detail/$1';
+
+
+$route['dashboard/transaction'] = 'dashboard/transaction_index';
+$route['dashboard/transaction/(:any)'] = 'dashboard/transaction_detail/$1';
 
 $route['user/ganti-password'] = 'user/changepw';
 $route['lupa-password'] = 'register/forgotpw';
-
+$route['logout'] = 'login/logout';
 $route['master'] = 'more/master';
 $route['sistem'] = 'more/sistem';
+$route['category'] = 'home/redirect';
+$route['pay'] = 'home/redirect';
+$route['home'] = 'home/redirect';
+$route['profile'] = 'home/profile';
+$route['profile/edit'] = 'home/profile_edit';
+$route['myorder'] = 'home/myorder';
+$route['myorder/(:any)'] = 'home/detail_order/$1';
+$route['pay/(:any)'] = 'home/pay/$1';
+$route['category/(:any)'] = 'home/category/$1';
+$route['product/(:any)'] = 'home/product/$1';
+
 
 
 /*

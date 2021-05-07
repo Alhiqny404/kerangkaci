@@ -14,8 +14,6 @@ class Menu_Model extends CI_Model {
   var $column_search = ['menu'];
   var $order = ['urutan' => 'asc'];
 
-
-
   public function __construct() {
     parent::__construct();
     $this->load->database();
@@ -60,13 +58,11 @@ class Menu_Model extends CI_Model {
     return $query->result();
   }
 
-
   function count_filtered() {
     $this->_get_datatables_query();
     $query = $this->db->get();
     return $query->num_rows();
   }
-
 
   public function count_all() {
     $this->db->from($this->table);
@@ -97,6 +93,17 @@ class Menu_Model extends CI_Model {
   public function delete_by_id($id) {
     $this->db->where('id', $id);
     $this->db->delete($this->table);
+  }
+
+
+
+
+
+  public function get_all() {
+    return $this->db->get($this->table);
+  }
+  public function get_where($where) {
+    return $this->db->get_where($this->table, $where);
   }
 
 }

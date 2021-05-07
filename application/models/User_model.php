@@ -5,18 +5,18 @@ class User_model extends CI_Model {
 
   var $table = 'user';
   var $column_order = [null,
-    'nama',
+    'username',
     'email',
     'avatar',
     'role',
     'created_at',
     'is_active',
     null];
-  var $column_search = ['nama',
+  var $column_search = ['username',
     'email',
     'role',
     'created_at'];
-  var $order = ['nama' => 'asc'];
+  var $order = ['username' => 'asc'];
 
   public function __construct() {
     parent::__construct();

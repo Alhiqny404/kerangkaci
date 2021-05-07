@@ -9,15 +9,15 @@ class Register extends CI_Controller {
   }
 
   public function index() {
-    $this->load->view('auth/register');
+    $this->load->view('home/signup/index');
   }
 
   public function validate() {
-    $this->form_validation->set_rules('nama', 'Nama', 'trim|required|min_length[2]|max_length[10]',
+    $this->form_validation->set_rules('username', 'username', 'trim|required|min_length[2]|max_length[10]',
       [
-        'required' => 'Nama Panggilan harus diisi',
-        'min_lenght' => 'Nama Panggilan terlalu pendek',
-        'max_length' => 'Nama Panggilan Terlalu panjang'
+        'required' => 'Username harus diisi',
+        'min_lenght' => 'Username Panggilan terlalu pendek',
+        'max_length' => 'Username Terlalu panjang'
       ]);
     $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[user.email]',
       [
@@ -30,7 +30,7 @@ class Register extends CI_Controller {
         'required' => 'Password harus diisi',
         'min_length' => 'Password terlalu pendek'
       ]);
-    $this->form_validation->set_rules('password2', 'Password2', 'trim|required|matches[password]',
+    $this->form_validation->set_rules('password_confirm', 'password_confirm', 'trim|required|matches[password]',
       [
         'required' => 'Password konfirmasi harus diisi',
         'matches' => 'Pssword tidak sesuai dengan diatas'
@@ -38,23 +38,25 @@ class Register extends CI_Controller {
 
     if ($this->form_validation->run() == false) {
       $err = [
-        'nama' => form_error('nama'),
+        'username' => form_error('username'),
         'email' => form_error('email'),
         'password' => form_error('password'),
-        'password2' => form_error('password2')
+        'password_confirm' => form_error('password_confirm')
       ];
       echo json_encode(['status' => FALSE, 'err' => $err]);
     } else {
-      $data = [
-        'nama' => htmlspecialchars($this->input->post('nama'), true),
+
+      $data_user = [
+        'username' => htmlspecialchars($this->input->post('username'), true),
         'email' => htmlspecialchars($this->input->post('email'), true),
         'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
         'avatar' => 'avatar.png',
-        'limit_salah' => 0,
         'is_active' => 0,
         'role_id' => 2,
         'created_at' => time()
       ];
+      $this->db->insert('user', $data_user);
+
 
       $token = base64_encode(random_bytes(32));
       $user_token = [
@@ -63,7 +65,6 @@ class Register extends CI_Controller {
         'created_at' => time()
       ];
 
-      $this->db->insert('user', $data);
       $this->db->insert('user_token', $user_token);
       $this->_sendemail($token, 'verify');
       echo json_encode(['status' => TRUE, 'url' => 'login']);

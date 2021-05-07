@@ -170,7 +170,7 @@
           <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
             <img alt="image" src="<?= base_url('uploads/image/profile/').datauser($this->session->userdata('email'))['avatar']; ?>" class="rounded-circle mr-1">
             <div class="d-sm-none d-lg-inline-block">
-              Hi, <?=datauser($this->session->userdata('email'))['nama']; ?>
+              Hi, <?=datauser($this->session->userdata('email'))['username']; ?>
             </div>
           </a>
             <div class="dropdown-menu dropdown-menu-right">

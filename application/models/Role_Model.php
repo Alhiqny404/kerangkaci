@@ -99,4 +99,8 @@ class Role_Model extends CI_Model {
     $this->db->delete($this->table);
   }
 
+  public function get_all() {
+    return $this->db->get($this->table);
+  }
+
 }

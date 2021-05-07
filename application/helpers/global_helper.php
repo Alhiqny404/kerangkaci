@@ -13,14 +13,14 @@ function harus_login() {
   } else
   {
     $roleId = $ci->session->userdata('role_id');
-    $menu = $ci->uri->segment(1);
+    $menu = $ci->uri->segment(2);
 
     $query = $ci->db->get_where('menu', ['menu' => $menu])->row_array();
     $menuId = $query['id'];
     $access = $ci->db->get_where('role_menu', ['role_id' => $roleId, 'menu_id' => $menuId]);
 
     if ($access->num_rows() < 1) {
-      redirect('login/blokir');
+      //redirect('login/blokir');
     }
   }
 }
@@ -35,7 +35,6 @@ function akses_submenu() {
   if ($status == 0) {
     echo 'menu ini dinonaktifkan'; die;
   }*/
-
 
 }
 
@@ -67,12 +66,12 @@ function datauser($email) {
 
   $ci = get_instance();
   $query = "
-  SELECT `avatar`,`nama` FROM `user` WHERE `email` = '$email'
+  SELECT `avatar`,`username` FROM `user` WHERE `email` = '$email'
   ";
   $user = $ci->db->query($query)->row_array();
   return $datauser = [
     'avatar' => $user['avatar'],
-    'nama' => $user['nama']
+    'username' => $user['username']
   ];
 }
 
@@ -86,5 +85,18 @@ function access($roleId, $menuId) {
   if ($return->num_rows() > 0) {
     return 'checked="checked"';
   }
+
+}
+
+function categories() {
+  $ci = get_instance();
+  $categories = $ci->load->model('Category_model', 'categories');
+  return $ci->categories->get();
+}
+
+function count_cart() {
+  $ci = get_instance();
+  $cart = $ci->load->model('Cart_model', 'cart_m');
+  return $ci->cart_m->get_where(['id_user' => $ci->session->userdata('id_user'), 'status' => 0])->num_rows();
 
 }

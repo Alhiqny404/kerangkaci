@@ -21,7 +21,7 @@
               <div class="d-flex flex-column align-items-center text-center">
                 <img src="<?= base_url('uploads/image/profile/').datauser($this->session->userdata('email'))['avatar']; ?>" alt="Admin" class="rounded-circle" width="150">
                 <div class="mt-3">
-                  <h4><?=datauser($this->session->userdata('email'))['nama']; ?></h4>
+                  <h4><?=datauser($this->session->userdata('email'))['username']; ?></h4>
                   <p class="text-secondary mb-1">
                     Full Stack Developer
                   </p>
@@ -67,7 +67,7 @@
                   <h6 class="mb-0">Full Name</h6>
                 </div>
                 <div class="col-sm-9 text-secondary">
-                  <?=datauser($this->session->userdata('email'))['nama']; ?>
+                  <?=datauser($this->session->userdata('email'))['username']; ?>
                 </div>
               </div>
               <hr>
@@ -77,6 +77,7 @@
                 </div>
                 <div class="col-sm-9 text-secondary" id="field-email">
 
+                  <?=$this->session->userdata('email'); ?>
                 </div>
               </div>
               <hr>

@@ -16,7 +16,6 @@ class Login extends CI_Controller {
 
 
   public function validate() {
-
     // SET RULES PADA FORM LOGIN
     $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email', [
       'required' => 'email harus diisi',
@@ -26,7 +25,6 @@ class Login extends CI_Controller {
       'required' => 'password harus diisi',
       'min_length' => 'password terlalu pendek'
     ]);
-
 
     // JIKA VALIDASI GAGAL
     if ($this->form_validation->run() == FALSE) {
@@ -50,18 +48,17 @@ class Login extends CI_Controller {
           // JIKA PASSWORD BENAR
           if (password_verify($password, $user['password'])) {
             $data = [
+              'id_user' => $user['id'],
               'email' => $user['email'],
-              'nama' => $user['nama'],
+              'username' => $user['username'],
               'role_id' => $user['role_id']
             ];
             $this->session->set_userdata($data);
-            // JIKA ROLE ADMIN
-            if ($user['role_id'] == 1) {
-              echo json_encode(['status' => TRUE, 'url' => 'dashboard']);
-            }
-            // JIKA ROLE SELAIN ADMIN
-            else {
-              echo json_encode(['status' => TRUE, 'url' => 'home']);
+            $roles = $this->db->get('role')->result_array();
+            foreach ($roles as $role) {
+              if ($user['role_id'] == $role['id']) {
+                echo json_encode(['status' => TRUE, 'url' => $role['redirect']]);
+              }
             }
           }
           // JIKA PASSWORD SALAH
